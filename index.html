@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Win 11 Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --a:#0078d4;--a2:#60cdff;
+  --glass:rgba(252,252,252,0.86);--gb:rgba(0,0,0,0.09);
+  --sh:0 12px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.1);
+  --r:12px;--tb:48px;--fn:'Tajawal',system-ui,sans-serif;
+  --bg-img:url('https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1920&q=80');
+}
+body{font-family:var(--fn);overflow:hidden;width:100vw;height:100vh;background:#000;user-select:none;}
+textarea,input,select{user-select:text;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes winPop{from{opacity:0;transform:scale(.92) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes nIn{from{opacity:0;transform:translateX(24px) scale(.94)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* ══ LOADING ══ */
+#lo{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+#lo.off{display:none;}
+.lring{width:48px;height:48px;border:4px solid rgba(255,255,255,.15);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+.ltxt{color:rgba(255,255,255,.7);font-size:14px;}
+.llogo{font-size:52px;margin-bottom:8px;animation:pulse 2s ease-in-out infinite;}
+
+/* ══ LOGIN SCREEN ══ */
+#ls{position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .7s,transform .7s;}
+#ls.out{opacity:0;transform:scale(1.05);pointer-events:none;}
+#ls.gone{display:none;}
+#bgc{position:absolute;inset:0;width:100%;height:100%;}
+.ltime{color:#fff;font-size:90px;font-weight:200;letter-spacing:-4px;text-shadow:0 2px 30px rgba(0,0,0,.5);z-index:1;line-height:1;}
+.ldate{color:rgba(255,255,255,.8);font-size:18px;font-weight:400;z-index:1;letter-spacing:.5px;}
+.lcard{z-index:1;background:rgba(255,255,255,.1);backdrop-filter:blur(50px) saturate(200%);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:40px 46px;width:400px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 32px 80px rgba(0,0,0,.6);}
+.lav{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 6px 24px rgba(0,120,212,.5);}
+.lcard h2{color:#fff;font-weight:500;font-size:22px;}
+.li{width:100%;padding:13px 18px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.22);border-radius:10px;color:#fff;font-size:15px;outline:none;transition:all .2s;font-family:var(--fn);}
+.li::placeholder{color:rgba(255,255,255,.4);}
+.li:focus{border-color:var(--a2);background:rgba(255,255,255,.22);}
+.li.shake{animation:shake .3s ease;}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,#0078d4,#005fa3);border:none;border-radius:10px;color:#fff;font-size:16px;cursor:pointer;font-family:var(--fn);font-weight:500;box-shadow:0 4px 18px rgba(0,120,212,.45);transition:all .2s;}
+.lbtn:hover{background:linear-gradient(135deg,#0086f0,#0070b8);box-shadow:0 6px 24px rgba(0,120,212,.6);transform:translateY(-1px);}
+.lerr{color:#ff8080;font-size:13px;display:none;text-align:center;background:rgba(255,80,80,.12);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,80,80,.2);width:100%;}
+.ldiv{color:rgba(255,255,255,.25);font-size:13px;}
+.ltog{color:rgba(255,255,255,.55);font-size:13px;cursor:pointer;}
+.ltog span{color:var(--a2);text-decoration:underline;}
+.lload{display:none;color:rgba(255,255,255,.7);font-size:13px;align-items:center;gap:8px;}
+.lload.on{display:flex;}
+.sm2{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
+
+/* ══ DESKTOP ══ */
+#desk{width:100vw;height:100vh;background:var(--bg-img) center/cover no-repeat;position:relative;display:none;}
+#desk.on{display:block;}
+#desk-overlay{position:absolute;inset:0;background:rgba(0,0,0,.05);pointer-events:none;}
+
+/* DARK MODE */
+body.dark{--glass:rgba(28,28,35,0.9);--gb:rgba(255,255,255,0.07);}
+body.dark #tbar{background:rgba(20,20,28,.92);border-top-color:rgba(255,255,255,.08);}
+body.dark #smenu{background:rgba(22,22,30,.94);}
+body.dark .win{background:var(--glass);}
+body.dark .tbar2{background:rgba(35,35,45,.7);border-bottom-color:rgba(255,255,255,.07);}
+body.dark .t-tit,.dark .wlbl{color:#eee;}
+body.dark #tclock{color:#ddd;}
+body.dark .npb,.dark .glbtn,.dark .rcbtn,.dark .expnav{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:#ddd;}
+body.dark .npb:hover,.dark .glbtn:hover{background:rgba(255,255,255,.14);}
+body.dark #narea{background:rgba(18,18,24,.95);color:#e8e8e8;}
+body.dark .npsel{background:rgba(30,30,40,.9);border-color:rgba(255,255,255,.12);color:#ddd;}
+body.dark .npst,.dark .nptb,.dark .gltb,.dark .rctb,.dark .exptb{background:rgba(30,30,40,.6);border-color:rgba(255,255,255,.07);}
+body.dark .setnav{background:rgba(20,20,28,.5);}
+body.dark .snitem{color:#ccc;}
+body.dark .snitem.on{background:rgba(0,120,212,.2);color:var(--a2);}
+body.dark .scard{background:rgba(255,255,255,.06);}
+body.dark .srow{border-color:rgba(255,255,255,.06);color:#ddd;}
+body.dark .expside{background:rgba(20,20,28,.4);}
+body.dark .expsi{color:#ccc;}
+body.dark .expsi.on{background:rgba(0,120,212,.15);color:var(--a2);}
+body.dark .expadr,.dark .expsrch{background:rgba(30,30,40,.8);border-color:rgba(255,255,255,.1);color:#ddd;}
+body.dark .expf{color:#ccc;}
+body.dark .rcitem{color:#ddd;}
+body.dark .rcname{color:#eee;}
+body.dark .smapp{color:#ddd;}
+body.dark .smsearch{background:rgba(30,30,40,.9);border-color:rgba(255,255,255,.1);color:#ddd;}
+body.dark .calbtn{background:rgba(255,255,255,.07);color:#eee;border-color:rgba(255,255,255,.1);}
+body.dark .calbtn:hover{background:rgba(255,255,255,.14);}
+body.dark .calbtn.op{background:rgba(0,120,212,.25);color:var(--a2);}
+body.dark .caldis{background:rgba(18,18,24,.95);color:#e8e8e8;}
+body.dark .calheader{background:rgba(30,30,40,.8);}
+
+/* ══ DESKTOP ICONS ══ */
+.di{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:10px 8px;border-radius:10px;width:86px;transition:background .15s;}
+.di:hover{background:rgba(255,255,255,.22);}
+.di:active{background:rgba(255,255,255,.35);}
+.di .ico{font-size:42px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.45));}
+.di .lbl{color:#fff;font-size:12px;font-weight:500;text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.9);line-height:1.3;}
+
+/* ══ TASKBAR ══ */
+#tbar{position:fixed;bottom:0;left:0;right:0;height:var(--tb);background:rgba(244,244,244,.88);backdrop-filter:blur(30px) saturate(200%);border-top:1px solid rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;gap:2px;z-index:700;}
+.tbb{width:44px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s;font-size:22px;position:relative;}
+.tbb:hover{background:rgba(0,0,0,.08);}
+.tbb:active{background:rgba(0,0,0,.13);}
+.tbb.run::after{content:'';position:absolute;bottom:3px;width:16px;height:3px;border-radius:2px;background:var(--a);transition:width .15s;}
+.tbb.run.focused::after{width:22px;}
+#tr{position:absolute;right:6px;display:flex;align-items:center;gap:2px;}
+#tclock{padding:4px 8px;border-radius:6px;cursor:pointer;text-align:center;font-size:11.5px;line-height:1.45;color:#111;min-width:58px;}
+#tclock:hover{background:rgba(0,0,0,.07);}
+.tnet,.tspk,.tdm{padding:4px 7px;border-radius:6px;cursor:pointer;font-size:16px;}
+.tnet:hover,.tspk:hover,.tdm:hover{background:rgba(0,0,0,.07);}
+
+/* ══ START MENU ══ */
+#smenu{position:fixed;bottom:calc(var(--tb)+10px);left:50%;transform:translateX(-50%) translateY(10px);width:650px;background:rgba(243,243,243,.93);backdrop-filter:blur(40px) saturate(200%);border-radius:18px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);padding:26px 26px 18px;z-index:800;display:none;opacity:0;}
+#smenu.open{display:block;opacity:1;transform:translateX(-50%) translateY(0);animation:slideUp .2s cubic-bezier(.34,1.2,.64,1);}
+.smsr{width:100%;padding:11px 18px;border:1px solid rgba(0,0,0,.12);border-radius:10px;font-size:14px;background:#fff;outline:none;font-family:var(--fn);margin-bottom:20px;box-shadow:inset 0 1px 3px rgba(0,0,0,.05);}
+.smtit{font-size:11px;color:#777;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
+.smg{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:18px;}
+.sma{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 5px;border-radius:10px;cursor:pointer;transition:background .12s;font-size:11.5px;color:#1a1a1a;text-align:center;}
+.sma:hover{background:rgba(0,0,0,.07);}
+.sma .si{font-size:30px;}
+.smbot{padding-top:14px;border-top:1px solid rgba(0,0,0,.09);display:flex;align-items:center;justify-content:space-between;}
+.smuser{display:flex;align-items:center;gap:12px;}
+.smav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;}
+.smpow{padding:8px 14px;border-radius:8px;cursor:pointer;font-size:20px;transition:background .12s;}
+.smpow:hover{background:rgba(200,30,30,.1);}
+
+/* ══ WINDOWS ══ */
+.win{position:fixed;background:var(--glass);backdrop-filter:blur(28px) saturate(180%);border-radius:var(--r);border:1px solid var(--gb);box-shadow:var(--sh);display:none;flex-direction:column;overflow:hidden;z-index:100;min-width:300px;min-height:200px;resize:both;transition:box-shadow .15s;}
+.win.open{display:flex;}
+.win:focus-within,.win.focused{box-shadow:0 16px 56px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.15);}
+.win.popin{animation:winPop .22s cubic-bezier(.34,1.3,.64,1);}
+.win.maxi{border-radius:0!important;top:0!important;left:0!important;width:100vw!important;height:calc(100vh - var(--tb))!important;resize:none!important;}
+.tbar2{height:40px;min-height:40px;display:flex;align-items:center;padding:0 0 0 14px;gap:9px;background:rgba(255,255,255,.55);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;cursor:move;}
+.tbar2 .t-ico{font-size:16px;flex-shrink:0;}
+.tbar2 .t-tit{font-size:13px;font-weight:500;color:#222;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.wctrl{display:flex;margin-left:0;}
+.wb{width:46px;height:40px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s;flex-shrink:0;}
+.wb:hover{background:rgba(0,0,0,.08);}
+.wb.cls:hover{background:#c42b1c;}
+.wb.cls:hover svg line{stroke:#fff!important;}
+.wb svg{width:10px;height:10px;pointer-events:none;}
+
+/* ══ NOTEPAD ══ */
+#wnote{width:720px;height:520px;top:80px;left:140px;}
+.nptb{display:flex;align-items:center;gap:2px;padding:5px 10px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-wrap:wrap;}
+.npb{padding:5px 11px;border-radius:5px;border:1px solid transparent;background:transparent;cursor:pointer;font-size:13px;transition:all .12s;font-family:var(--fn);color:#333;}
+.npb:hover{background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.1);}
+.npsp{width:1px;height:22px;background:rgba(0,0,0,.1);margin:0 2px;}
+.npsel{padding:5px 10px;border-radius:6px;border:1px solid rgba(0,0,0,.12);font-family:var(--fn);font-size:13px;background:#fff;max-width:190px;cursor:pointer;outline:none;}
+#narea{flex:1;border:none;outline:none;background:#fff;font-size:14px;line-height:1.8;font-family:'Consolas','Courier New',monospace;padding:16px 20px;resize:none;width:100%;direction:rtl;}
+.npst{height:26px;min-height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:11.5px;color:#777;border-top:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.42);flex-shrink:0;}
+.npsv{color:#28a745;font-size:11px;opacity:0;transition:opacity .3s;margin:0 auto;background:rgba(40,167,69,.1);padding:2px 8px;border-radius:4px;}
+.npsv.on{opacity:1;}
+
+/* ══ GALLERY ══ */
+#wgal{width:860px;height:570px;top:70px;left:160px;}
+.gltb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.glbtn{padding:7px 16px;border-radius:7px;border:1px solid rgba(0,0,0,.12);background:#fff;cursor:pointer;font-size:13px;font-family:var(--fn);transition:all .12s;}
+.glbtn:hover{background:#f0f0f0;border-color:rgba(0,0,0,.2);}
+.glcnt{font-size:13px;color:#777;margin-right:auto;}
+#ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;padding:14px;}
+.gi{aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;position:relative;background:#e5e5e5;transition:transform .15s,box-shadow .15s;}
+.gi:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.gi img{width:100%;height:100%;object-fit:cover;display:block;}
+.gdel{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:13px;display:none;align-items:center;justify-content:center;transition:background .12s;}
+.gi:hover .gdel{display:flex;}
+.gdel:hover{background:rgba(196,43,28,.85);}
+.gnm{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:11px;padding:18px 8px 6px;display:none;}
+.gi:hover .gnm{display:block;}
+.gempty{grid-column:1/-1;padding:70px 20px;text-align:center;color:#c0c0c0;}
+#gfile{display:none;}
+
+/* ══ LIGHTBOX ══ */
+#lb{position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;}
+#lb.open{display:flex;animation:fadeIn .2s;}
+#lbimg{max-width:88vw;max-height:86vh;border-radius:10px;box-shadow:0 24px 80px rgba(0,0,0,.7);}
+.lbx{position:absolute;top:20px;right:20px;color:#fff;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:46px;height:46px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.lbx:hover{background:rgba(196,43,28,.7);}
+.lbarr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;border-radius:50%;width:52px;height:52px;font-size:26px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.lbarr:hover{background:rgba(255,255,255,.22);}
+#lbprev{left:20px;}#lbnext{right:20px;}
+#lbcap{position:absolute;bottom:20px;color:rgba(255,255,255,.7);font-size:13px;background:rgba(0,0,0,.4);padding:6px 14px;border-radius:20px;}
+
+/* ══ SETTINGS ══ */
+#wset{width:800px;height:560px;top:80px;left:150px;}
+.setwrap{display:flex;height:100%;overflow:hidden;}
+.setnav{width:215px;background:rgba(255,255,255,.35);border-left:1px solid rgba(0,0,0,.07);padding:10px 6px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;overflow-y:auto;}
+.sni{padding:11px 14px;border-radius:8px;cursor:pointer;font-size:13.5px;transition:background .12s;display:flex;align-items:center;gap:10px;color:#222;}
+.sni:hover{background:rgba(0,0,0,.06);}
+.sni.on{background:rgba(0,120,212,.12);color:var(--a);font-weight:500;}
+.setpanels{flex:1;overflow-y:auto;}
+.spa{display:none;padding:24px;}
+.spa.on{display:block;animation:fadeIn .2s;}
+.spa h2{font-size:22px;font-weight:500;margin-bottom:20px;color:#111;}
+.scard{background:rgba(255,255,255,.65);border-radius:10px;border:1px solid rgba(0,0,0,.07);margin-bottom:10px;overflow:hidden;}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(0,0,0,.05);font-size:14px;}
+.srow:last-child{border-bottom:none;}
+.srlbl{display:flex;flex-direction:column;gap:2px;}
+.srsub{font-size:12px;color:#999;}
+.sucard{display:flex;align-items:center;gap:16px;padding:20px;background:linear-gradient(135deg,rgba(0,120,212,.1),rgba(96,205,255,.07));border-radius:12px;border:1px solid rgba(0,120,212,.16);margin-bottom:20px;}
+.suav{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;flex-shrink:0;}
+.slout{padding:9px 20px;background:#c42b1c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:var(--fn);margin-right:auto;transition:background .15s;}
+.slout:hover{background:#a82315;}
+.tog{width:48px;height:26px;background:#bbb;border-radius:13px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--a);}
+.tog::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.tog.on::after{transform:translateX(-22px);}
+.wpg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;}
+.wpi{aspect-ratio:16/9;border-radius:8px;cursor:pointer;overflow:hidden;border:3px solid transparent;transition:all .15s;}
+.wpi:hover{transform:scale(1.04);}
+.wpi.sel{border-color:var(--a);}
+.wpi img{width:100%;height:100%;object-fit:cover;}
+.accent-g{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.acol{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s;flex-shrink:0;}
+.acol:hover{transform:scale(1.15);}
+.acol.sel{border-color:#fff;box-shadow:0 0 0 2px var(--a);}
+
+/* ══ RECYCLE BIN ══ */
+#wrec{width:700px;height:490px;top:90px;left:160px;}
+.rctb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.rclist{padding:8px;overflow-y:auto;flex:1;}
+.rci{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;font-size:13.5px;transition:background .12s;}
+.rci:hover{background:rgba(0,0,0,.05);}
+.rcico{font-size:22px;flex-shrink:0;}
+.rcnm{flex:1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rcdt{font-size:11px;color:#aaa;flex-shrink:0;}
+.rcacts{display:flex;gap:6px;flex-shrink:0;}
+.rcbtn{padding:5px 11px;border-radius:6px;border:1px solid rgba(0,0,0,.12);background:#fff;cursor:pointer;font-size:12px;font-family:var(--fn);transition:all .12s;}
+.rcbtn:hover{background:#f0f0f0;}
+.rcbtn.p{border-color:rgba(196,43,28,.25);color:#c42b1c;}
+.rcbtn.p:hover{background:#fff0ee;}
+.rcempty{padding:70px;text-align:center;color:#c0c0c0;display:flex;flex-direction:column;align-items:center;gap:12px;}
+
+/* ══ FILE EXPLORER ══ */
+#wexp{width:880px;height:560px;top:70px;left:100px;}
+.exptb{display:flex;align-items:center;gap:6px;padding:7px 12px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.expnav{width:32px;height:32px;border-radius:6px;border:1px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .12s;}
+.expnav:hover{background:#f0f0f0;}
+.expadr{flex:1;padding:7px 14px;border:1px solid rgba(0,0,0,.12);border-radius:7px;background:#fff;font-size:13px;font-family:var(--fn);outline:none;color:#333;}
+.expsrch{padding:7px 14px;border:1px solid rgba(0,0,0,.12);border-radius:7px;background:#fff;font-size:13px;font-family:var(--fn);outline:none;width:180px;}
+.expbody{display:flex;flex:1;overflow:hidden;}
+.expside{width:205px;background:rgba(255,255,255,.32);border-left:1px solid rgba(0,0,0,.07);padding:10px 6px;overflow-y:auto;flex-shrink:0;}
+.expsec{font-size:11px;color:#999;padding:10px 8px 4px;font-weight:700;letter-spacing:.5px;}
+.expsi{padding:9px 12px;border-radius:7px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;transition:background .12s;color:#222;}
+.expsi:hover{background:rgba(0,0,0,.06);}
+.expsi.on{background:rgba(0,120,212,.1);color:var(--a);}
+.expmain{flex:1;overflow-y:auto;padding:12px;}
+.expg{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;}
+.expf{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;border-radius:8px;cursor:pointer;font-size:12px;text-align:center;transition:background .12s;color:#222;}
+.expf:hover{background:rgba(0,0,0,.07);}
+.efico{font-size:40px;}
+.efnm{max-width:98px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;}
+
+/* ══ CALCULATOR ══ */
+#wcalc{width:320px;height:520px;top:100px;left:500px;resize:none;}
+.caldis{background:#fff;padding:16px 20px;font-size:32px;font-weight:300;text-align:left;border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;min-height:90px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;}
+.calexpr{font-size:14px;color:#999;min-height:20px;word-break:break-all;}
+.calcont{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,0,0,.06);flex:1;}
+.calbtn{border:none;cursor:pointer;font-size:18px;font-family:var(--fn);background:#f9f9f9;transition:background .1s;border:1px solid transparent;}
+.calbtn:hover{background:#efefef;border-color:rgba(0,0,0,.07);}
+.calbtn:active{background:#e5e5e5;}
+.calbtn.op{background:#e8f4fd;color:var(--a);}
+.calbtn.op:hover{background:#d8edfb;}
+.calbtn.eq{background:var(--a);color:#fff;font-size:22px;}
+.calbtn.eq:hover{background:#0086f0;}
+.calbtn.clr{background:#fff3f0;color:#c42b1c;}
+.calbtn.clr:hover{background:#fde8e5;}
+.calbtn.wide{grid-column:span 2;}
+.calheader{padding:8px 14px;font-size:12px;color:#888;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.06);flex-shrink:0;}
+
+/* ══ CLOCK/WIDGET ══ */
+#wclk{width:310px;height:320px;top:110px;left:820px;resize:none;}
+.clkbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:linear-gradient(135deg,#0f2744,#1a4a7e);}
+#clockFace{position:relative;width:160px;height:160px;}
+#clockFace canvas{width:160px;height:160px;}
+.clkdig{font-size:26px;font-weight:300;color:#fff;letter-spacing:2px;}
+.clkdate2{font-size:13px;color:rgba(255,255,255,.65);letter-spacing:.5px;}
+.clktimezone{font-size:11px;color:rgba(255,255,255,.4);}
+
+/* ══ MUSIC PLAYER ══ */
+#wmus{width:340px;height:420px;top:90px;left:860px;resize:none;}
+.musbody{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px;background:linear-gradient(160deg,#1a1a2e,#16213e,#0f3460);}
+.musart{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#0078d4,#60cdff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:50px;box-shadow:0 8px 30px rgba(0,100,200,.5);flex-shrink:0;}
+.musart.spin{animation:spin 4s linear infinite;}
+.mustit{font-size:16px;font-weight:500;color:#fff;text-align:center;}
+.musart2{font-size:13px;color:rgba(255,255,255,.5);text-align:center;}
+.musprog{width:100%;height:4px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;position:relative;}
+.musbar{height:100%;background:var(--a2);border-radius:2px;transition:width .5s linear;width:0%;}
+.mustimes{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);width:100%;}
+.musctrl{display:flex;align-items:center;gap:16px;}
+.musbtn{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:22px;transition:all .15s;padding:4px;}
+.musbtn:hover{color:#fff;transform:scale(1.1);}
+.musbtn.play{background:var(--a);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;box-shadow:0 4px 16px rgba(0,120,212,.5);}
+.musbtn.play:hover{background:#0086f0;transform:scale(1.08);}
+.musvol{display:flex;align-items:center;gap:8px;width:100%;}
+.musvol span{font-size:14px;color:rgba(255,255,255,.5);}
+.musvol input{flex:1;accent-color:var(--a2);}
+
+/* ══ NOTIF PANEL ══ */
+#nbox{position:fixed;top:14px;right:14px;z-index:8000;display:flex;flex-direction:column;gap:8px;width:320px;}
+.notif{background:rgba(248,248,248,.97);backdrop-filter:blur(20px);border-radius:14px;padding:14px 16px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);display:flex;gap:12px;align-items:flex-start;animation:nIn .28s cubic-bezier(.34,1.3,.64,1);}
+.notif.out{opacity:0;transform:translateX(24px);transition:.25s;}
+.nico{font-size:26px;flex-shrink:0;}
+.ncon{flex:1;}
+.ntit{font-size:13.5px;font-weight:600;color:#111;margin-bottom:2px;}
+.nbod{font-size:12.5px;color:#777;}
+
+/* ══ CTX MENU ══ */
+#ctx{position:fixed;background:rgba(248,248,248,.97);backdrop-filter:blur(24px);border-radius:12px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);padding:6px;z-index:5000;display:none;min-width:200px;}
+#ctx.open{display:block;animation:winPop .15s ease;}
+.cxi{padding:9px 16px;border-radius:7px;font-size:13.5px;cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:10px;color:#222;}
+.cxi:hover{background:rgba(0,120,212,.1);color:var(--a);}
+.cxs{height:1px;background:rgba(0,0,0,.07);margin:4px 0;}
+
+/* ══ SYSTRAY POPUP ══ */
+#systray{position:fixed;bottom:calc(var(--tb)+8px);right:8px;width:360px;background:rgba(243,243,243,.94);backdrop-filter:blur(40px);border-radius:16px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);padding:20px;z-index:800;display:none;}
+#systray.open{display:block;animation:slideUp .18s ease;}
+.strow{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.stlbl{font-size:13px;color:#444;flex:1;}
+.strow input[type=range]{flex:1;accent-color:var(--a);}
+.strow span{font-size:13px;color:#666;min-width:30px;text-align:center;}
+.st-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
+.st-tile{padding:10px 6px;border-radius:10px;background:rgba(0,120,212,.1);cursor:pointer;text-align:center;font-size:11.5px;color:var(--a);transition:background .12s;}
+.st-tile:hover{background:rgba(0,120,212,.18);}
+.st-tile .sti{font-size:22px;display:block;margin-bottom:4px;}
+.st-tile.on{background:var(--a);color:#fff;}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.28);}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="lo">
+  <div class="llogo">⊞</div>
+  <div class="lring"></div>
+  <div class="ltxt" id="lotxt">جارٍ التحميل...</div>
+</div>
+
+<!-- LOGIN -->
+<div id="ls">
+  <canvas id="bgc"></canvas>
+  <div class="ltime" id="ltime">00:00</div>
+  <div class="ldate" id="ldate"></div>
+  <div class="lcard">
+    <div class="lav">👤</div>
+    <h2 id="ltit">تسجيل الدخول</h2>
+    <input class="li" id="lemail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+    <input class="li" id="lpass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <div class="lerr" id="lerr"></div>
+    <div class="lload" id="lload"><div class="sm2"></div> جارٍ التحقق...</div>
+    <button class="lbtn" id="lbtn">تسجيل الدخول ←</button>
+    <div class="ldiv">أو</div>
+    <div class="ltog" id="ltog">مستخدم جديد؟ <span>إنشاء حساب مجاني</span></div>
+  </div>
+</div>
+
+<!-- DESKTOP -->
+<div id="desk">
+  <div id="desk-overlay"></div>
+
+  <!-- Desktop Icons -->
+  <div class="di" style="top:20px;right:20px" ondblclick="OW('wnote')">
+    <div class="ico">📝</div><div class="lbl">مفكرتنا</div>
+  </div>
+  <div class="di" style="top:118px;right:20px" ondblclick="OW('wgal')">
+    <div class="ico">🖼️</div><div class="lbl">صورنا</div>
+  </div>
+  <div class="di" style="top:216px;right:20px" ondblclick="OW('wexp')">
+    <div class="ico">📁</div><div class="lbl">المستكشف</div>
+  </div>
+  <div class="di" style="top:314px;right:20px" ondblclick="OW('wrec')">
+    <div class="ico">🗑️</div><div class="lbl">المهملات</div>
+  </div>
+  <div class="di" style="top:412px;right:20px" ondblclick="OW('wset')">
+    <div class="ico">⚙️</div><div class="lbl">الإعدادات</div>
+  </div>
+  <div class="di" style="top:510px;right:20px" ondblclick="OW('wcalc')">
+    <div class="ico">🔢</div><div class="lbl">الحاسبة</div>
+  </div>
+
+  <!-- ══════════ NOTEPAD ══════════ -->
+  <div class="win" id="wnote">
+    <div class="tbar2" id="tb-wnote" onmousedown="SD(event,'wnote')">
+      <span class="t-ico">📝</span>
+      <span class="t-tit" id="nptit">المفكرة</span>
+      <span class="npsv" id="npsv">✓ محفوظ</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wnote')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wnote')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wnote')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="nptb">
+      <button class="npb" onclick="npNew()">📄 جديد</button>
+      <div class="npsp"></div>
+      <button class="npb" onclick="npSave()">💾 حفظ</button>
+      <div class="npsp"></div>
+      <button class="npb" onclick="npDel()">🗑️ حذف</button>
+      <div class="npsp"></div>
+      <button class="npb" id="npFmtBtn" onclick="npToggleFmt()">B</button>
+      <select id="npfont" onchange="document.getElementById('narea').style.fontFamily=this.value" style="padding:4px 8px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font-size:12px;background:#fff;cursor:pointer;">
+        <option value="'Consolas','Courier New',monospace">Mono</option>
+        <option value="var(--fn)">عربي</option>
+        <option value="'Georgia',serif">Georgia</option>
+        <option value="'Arial',sans-serif">Arial</option>
+      </select>
+      <div class="npsp"></div>
+      <select id="npsel" class="npsel" onchange="npLoad()"></select>
+    </div>
+    <textarea id="narea" placeholder="اكتب ملاحظاتك هنا...&#10;💡 حفظ تلقائي كل ثانيتين | Ctrl+S للحفظ الفوري"></textarea>
+    <div class="npst">
+      <span id="npw">0 كلمة</span>
+      <span class="npsv" id="npsv2">✓ محفوظ</span>
+      <span id="npc">0 حرف</span>
+    </div>
+  </div>
+
+  <!-- ══════════ GALLERY ══════════ -->
+  <div class="win" id="wgal">
+    <div class="tbar2" id="tb-wgal" onmousedown="SD(event,'wgal')">
+      <span class="t-ico">🖼️</span>
+      <span class="t-tit">معرض الصور</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wgal')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wgal')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wgal')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="gltb">
+      <button class="glbtn" onclick="document.getElementById('gfile').click()">➕ رفع صور</button>
+      <input type="file" id="gfile" multiple accept="image/*" onchange="glUp(event)">
+      <button class="glbtn" onclick="glView='grid';glRender()" title="شبكة">⊞</button>
+      <button class="glbtn" onclick="glView='list';glRender()" title="قائمة">☰</button>
+      <span class="glcnt" id="gcnt">0 صورة</span>
+    </div>
+    <div style="flex:1;overflow-y:auto;"><div id="ggrid"><div class="gempty"><span style="font-size:58px;display:block;margin-bottom:14px">🖼️</span>لا توجد صور<br><small style="color:#bbb;font-size:13px">اضغط "رفع صور" لإضافة صورك</small></div></div></div>
+  </div>
+
+  <!-- ══════════ SETTINGS ══════════ -->
+  <div class="win" id="wset">
+    <div class="tbar2" id="tb-wset" onmousedown="SD(event,'wset')">
+      <span class="t-ico">⚙️</span>
+      <span class="t-tit">الإعدادات</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wset')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wset')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wset')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="setwrap">
+      <div class="setnav">
+        <div class="sni on" onclick="SP(this,'account')">👤 الحساب</div>
+        <div class="sni" onclick="SP(this,'pers')">🎨 التخصيص</div>
+        <div class="sni" onclick="SP(this,'apps')">📦 التطبيقات</div>
+        <div class="sni" onclick="SP(this,'sys')">💻 النظام</div>
+        <div class="sni" onclick="SP(this,'priv')">🔒 الخصوصية</div>
+        <div class="sni" onclick="SP(this,'about')">ℹ️ حول</div>
+      </div>
+      <div class="setpanels">
+        <div class="spa on" id="sp-account">
+          <h2>الحساب</h2>
+          <div class="sucard">
+            <div class="suav">👤</div>
+            <div>
+              <div style="font-size:17px;font-weight:600;" id="suname">–</div>
+              <div style="font-size:13px;color:#888;margin-top:3px;" id="suemail">–</div>
+              <div style="font-size:12px;color:#28a745;margin-top:5px;">● متصل بـ Firebase Cloud</div>
+            </div>
+            <button class="slout" onclick="doOut()">تسجيل الخروج</button>
+          </div>
+          <div class="scard">
+            <div class="srow"><span class="srlbl"><b>الحفظ التلقائي</b><span class="srsub">حفظ كل تغيير تلقائياً في السحابة</span></span><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="srow"><span class="srlbl"><b>مزامنة الأجهزة</b><span class="srsub">بياناتك متاحة على كل أجهزتك</span></span><div class="tog on"></div></div>
+            <div class="srow"><span class="srlbl"><b>الإشعارات</b><span class="srsub">إشعارات حفظ البيانات</span></span><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="spa" id="sp-pers">
+          <h2>التخصيص</h2>
+          <div class="scard">
+            <div class="srow" style="flex-direction:column;align-items:flex-start;gap:14px;">
+              <b>خلفية الشاشة</b>
+              <div class="wpg" id="wpg"></div>
+            </div>
+          </div>
+          <div class="scard">
+            <div class="srow"><span class="srlbl"><b>الوضع الداكن</b><span class="srsub">تغيير مظهر النظام</span></span><div class="tog" id="dmTog" onclick="toggleDark()"></div></div>
+          </div>
+          <div class="scard">
+            <div class="srow" style="flex-direction:column;align-items:flex-start;gap:14px;">
+              <b>لون التمييز</b>
+              <div class="accent-g" id="accentG"></div>
+            </div>
+          </div>
+        </div>
+        <div class="spa" id="sp-apps">
+          <h2>التطبيقات</h2>
+          <div class="scard">
+            <div class="srow"><span>📝 المفكرة</span><button class="glbtn" onclick="OW('wnote')">فتح</button></div>
+            <div class="srow"><span>🖼️ معرض الصور</span><button class="glbtn" onclick="OW('wgal')">فتح</button></div>
+            <div class="srow"><span>📁 مستكشف الملفات</span><button class="glbtn" onclick="OW('wexp')">فتح</button></div>
+            <div class="srow"><span>🗑️ سلة المهملات</span><button class="glbtn" onclick="OW('wrec')">فتح</button></div>
+            <div class="srow"><span>🔢 الحاسبة</span><button class="glbtn" onclick="OW('wcalc')">فتح</button></div>
+            <div class="srow"><span>🕐 الساعة</span><button class="glbtn" onclick="OW('wclk')">فتح</button></div>
+            <div class="srow"><span>🎵 الموسيقى</span><button class="glbtn" onclick="OW('wmus')">فتح</button></div>
+          </div>
+        </div>
+        <div class="spa" id="sp-sys">
+          <h2>النظام</h2>
+          <div class="scard">
+            <div class="srow"><span>الإصدار</span><b>Win 11 Web v3.0</b></div>
+            <div class="srow"><span>Firebase</span><span style="color:#28a745">● nashama-4f46e</span></div>
+            <div class="srow"><span>المتصفح</span><span style="color:#888;font-size:12px" id="sbrow"></span></div>
+            <div class="srow"><span>الذاكرة</span><span style="color:#888;font-size:12px" id="smem">–</span></div>
+          </div>
+        </div>
+        <div class="spa" id="sp-priv">
+          <h2>الخصوصية</h2>
+          <div class="scard">
+            <div class="srow"><span class="srlbl"><b>حفظ البيانات</b><span class="srsub">حفظ تلقائي في Firebase</span></span><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="srow"><span class="srlbl"><b>التحليلات</b><span class="srsub">بيانات مجهولة لتحسين التجربة</span></span><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="spa" id="sp-about">
+          <h2></h2>
+          <div class="scard">
+            <div class="srow"><span>الاسم</span><b>نظام سوسو وبدر</b></div>
+            <div class="srow"><span>المطور</span><b>حبيب سوسو</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ RECYCLE BIN ══════════ -->
+  <div class="win" id="wrec">
+    <div class="tbar2" id="tb-wrec" onmousedown="SD(event,'wrec')">
+      <span class="t-ico">🗑️</span>
+      <span class="t-tit">سلة المهملات</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wrec')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wrec')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wrec')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="rctb">
+      <button class="glbtn" onclick="rcEmpty()">🗑️ إفراغ السلة</button>
+      <button class="glbtn" onclick="rcAll()">↩️ استعادة الكل</button>
+      <span style="font-size:12px;color:#999;margin-right:auto;" id="rccount">0 عنصر</span>
+    </div>
+    <div class="rclist" id="rclist"><div class="rcempty"><span style="font-size:58px">🗑️</span>سلة المهملات فارغة</div></div>
+  </div>
+
+  <!-- ══════════ FILE EXPLORER ══════════ -->
+  <div class="win" id="wexp">
+    <div class="tbar2" id="tb-wexp" onmousedown="SD(event,'wexp')">
+      <span class="t-ico">📁</span>
+      <span class="t-tit" id="exptitle">مستكشف الملفات</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wexp')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wexp')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wexp')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="exptb">
+      <button class="expnav" onclick="expGo('back')">←</button>
+      <button class="expnav" onclick="expGo('home',null)">↑</button>
+      <input class="expadr" id="expadr" value="هذا الكمبيوتر" readonly>
+      <input class="expsrch" id="expsrch" placeholder="🔍 بحث..." oninput="expSearch()">
+    </div>
+    <div class="expbody">
+      <div class="expside">
+        <div class="expsec">الوصول السريع</div>
+        <div class="expsi on" onclick="expGo('home',this)">🏠 الرئيسية</div>
+        <div class="expsi" onclick="expGo('notes',this)">📝 مفكرتنا</div>
+        <div class="expsi" onclick="expGo('gallery',this)">🖼️ صورنا</div>
+        <div class="expsi" onclick="expGo('recycle',this)">🗑️ المهملات</div>
+      </div>
+      <div class="expmain"><div class="expg" id="expg"></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ CALCULATOR ══════════ -->
+  <div class="win" id="wcalc">
+    <div class="tbar2" id="tb-wcalc" onmousedown="SD(event,'wcalc')">
+      <span class="t-ico">🔢</span>
+      <span class="t-tit">الحاسبة</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wcalc')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb cls" onclick="CW('wcalc')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="calheader"><span style="color:#666">الحاسبة العلمية</span></div>
+    <div class="caldis">
+      <div class="calexpr" id="calexpr"></div>
+      <div id="caldisp">0</div>
+    </div>
+    <div class="calcont">
+      <button class="calbtn clr" onclick="calC()">AC</button>
+      <button class="calbtn op" onclick="calIn('%')">%</button>
+      <button class="calbtn op" onclick="calDel()">⌫</button>
+      <button class="calbtn op" onclick="calIn('/')">÷</button>
+      <button class="calbtn" onclick="calIn('7')">7</button>
+      <button class="calbtn" onclick="calIn('8')">8</button>
+      <button class="calbtn" onclick="calIn('9')">9</button>
+      <button class="calbtn op" onclick="calIn('*')">×</button>
+      <button class="calbtn" onclick="calIn('4')">4</button>
+      <button class="calbtn" onclick="calIn('5')">5</button>
+      <button class="calbtn" onclick="calIn('6')">6</button>
+      <button class="calbtn op" onclick="calIn('-')">−</button>
+      <button class="calbtn" onclick="calIn('1')">1</button>
+      <button class="calbtn" onclick="calIn('2')">2</button>
+      <button class="calbtn" onclick="calIn('3')">3</button>
+      <button class="calbtn op" onclick="calIn('+')">+</button>
+      <button class="calbtn" onclick="calIn('+/-')">+/−</button>
+      <button class="calbtn" onclick="calIn('0')">0</button>
+      <button class="calbtn" onclick="calIn('.')">.</button>
+      <button class="calbtn eq" onclick="calEq()">=</button>
+    </div>
+  </div>
+
+  <!-- ══════════ CLOCK ══════════ -->
+  <div class="win" id="wclk">
+    <div class="tbar2" id="tb-wclk" onmousedown="SD(event,'wclk')">
+      <span class="t-ico">🕐</span>
+      <span class="t-tit">الساعة</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wclk')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb cls" onclick="CW('wclk')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="clkbody">
+      <div id="clockFace"><canvas id="clkCanvas" width="160" height="160"></canvas></div>
+      <div class="clkdig" id="clkdig">00:00:00</div>
+      <div class="clkdate2" id="clkdate2">الاثنين، 1 يناير 2024</div>
+      <div class="clktimezone">🌍 Asia/Riyadh</div>
+    </div>
+  </div>
+
+  <!-- ══════════ MUSIC PLAYER ══════════ -->
+  <div class="win" id="wmus">
+    <div class="tbar2" id="tb-wmus" onmousedown="SD(event,'wmus')">
+      <span class="t-ico">🎵</span>
+      <span class="t-tit">مشغّل الموسيقى</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wmus')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb cls" onclick="CW('wmus')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="musbody">
+      <div class="musart" id="musart">🎵</div>
+      <div>
+        <div class="mustit" id="mustit">اختر أغنية للتشغيل</div>
+        <div class="musart2" id="musart2">–</div>
+      </div>
+      <div style="width:100%">
+        <div class="musprog" id="musprog" onclick="musSeek(event)">
+          <div class="musbar" id="musbar"></div>
+        </div>
+        <div class="mustimes"><span id="muscur">0:00</span><span id="mustot">0:00</span></div>
+      </div>
+      <div class="musctrl">
+        <button class="musbtn" onclick="musPrev()">⏮</button>
+        <button class="musbtn" onclick="musShuffle()" title="تبديل" id="musShuf">🔀</button>
+        <button class="musbtn play" id="musPbtn" onclick="musToggle()">▶</button>
+        <button class="musbtn" onclick="musRepeat()" title="تكرار" id="musRep">🔁</button>
+        <button class="musbtn" onclick="musNext()">⏭</button>
+      </div>
+      <div class="musvol">
+        <span>🔈</span>
+        <input type="range" min="0" max="100" value="70" id="musvol" oninput="musVol(this.value)">
+        <span>🔊</span>
+      </div>
+      <div style="width:100%">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;">
+          <span>📁 اختر ملف:</span>
+          <input type="file" accept="audio/*" onchange="musLoad(event)" style="flex:1;font-size:12px;color:rgba(255,255,255,.5);">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKBAR -->
+  <div id="tbar">
+    <div class="tbb" style="font-size:21px" onclick="togSM()">⊞</div>
+    <div class="tbb" id="t-wnote" onclick="togW('wnote')" title="مفكرتنا">📝</div>
+    <div class="tbb" id="t-wgal"  onclick="togW('wgal')"  title="صورنا">🖼️</div>
+    <div class="tbb" id="t-wexp"  onclick="togW('wexp')"  title="المستكشف">📁</div>
+    <div class="tbb" id="t-wset"  onclick="togW('wset')"  title="الإعدادات">⚙️</div>
+    <div class="tbb" id="t-wrec"  onclick="togW('wrec')"  title="المهملات">🗑️</div>
+    <div class="tbb" id="t-wcalc" onclick="togW('wcalc')" title="الحاسبة">🔢</div>
+    <div class="tbb" id="t-wclk"  onclick="togW('wclk')"  title="الساعة">🕐</div>
+    <div class="tbb" id="t-wmus"  onclick="togW('wmus')"  title="الموسيقى">🎵</div>
+    <div id="tr">
+      <div class="tdm" onclick="toggleDark()" title="وضع داكن">🌙</div>
+      <div class="tnet" onclick="togST()" title="الشبكة">🌐</div>
+      <div id="tclock" onclick="togST()"></div>
+    </div>
+  </div>
+
+  <!-- START MENU -->
+  <div id="smenu">
+    <input class="smsr" id="smsr" placeholder="🔍 ابحث عن تطبيق..." oninput="smFilt()">
+    <div class="smtit">التطبيقات</div>
+    <div class="smg" id="smg">
+      <div class="sma" ondblclick="OW('wnote');closeSM()"><div class="si">📝</div><span>مفكرتنا</span></div>
+      <div class="sma" ondblclick="OW('wgal');closeSM()"><div class="si">🖼️</div><span>صورنا</span></div>
+      <div class="sma" ondblclick="OW('wexp');closeSM()"><div class="si">📁</div><span>المستكشف</span></div>
+      <div class="sma" ondblclick="OW('wset');closeSM()"><div class="si">⚙️</div><span>الإعدادات</span></div>
+      <div class="sma" ondblclick="OW('wrec');closeSM()"><div class="si">🗑️</div><span>المهملات</span></div>
+      <div class="sma" ondblclick="OW('wcalc');closeSM()"><div class="si">🔢</div><span>الحاسبة</span></div>
+      <div class="sma" ondblclick="OW('wclk');closeSM()"><div class="si">🕐</div><span>الساعة</span></div>
+      <div class="sma" ondblclick="OW('wmus');closeSM()"><div class="si">🎵</div><span>الموسيقى</span></div>
+    </div>
+    <div class="smbot">
+      <div class="smuser">
+        <div class="smav">👤</div>
+        <div id="smname" style="font-size:14px;font-weight:500;">–</div>
+      </div>
+      <div class="smpow" onclick="doOut()" title="تسجيل الخروج / إيقاف">⏻</div>
+    </div>
+  </div>
+
+  <!-- SYSTRAY POPUP -->
+  <div id="systray">
+    <div class="strow">
+      <span style="font-size:18px">🌐</span>
+      <span class="stlbl">واي فاي</span>
+      <span style="font-size:13px;color:#28a745;font-weight:500;">متصل</span>
+    </div>
+    <div class="strow">
+      <span style="font-size:16px">🔊</span>
+      <span class="stlbl">الصوت</span>
+      <input type="range" min="0" max="100" value="70" oninput="this.previousElementSibling.previousElementSibling.textContent='🔊 '+this.value+'%'">
+      <span>70%</span>
+    </div>
+    <div class="strow">
+      <span style="font-size:16px">☀️</span>
+      <span class="stlbl">السطوع</span>
+      <input type="range" min="0" max="100" value="100">
+      <span>100%</span>
+    </div>
+    <div class="st-tiles">
+      <div class="st-tile on" onclick="this.classList.toggle('on')"><span class="sti">📶</span>واي فاي</div>
+      <div class="st-tile" onclick="this.classList.toggle('on')"><span class="sti">🔵</span>بلوتوث</div>
+      <div class="st-tile" onclick="this.classList.toggle('on');toggleDark()"><span class="sti">🌙</span>داكن</div>
+      <div class="st-tile" onclick="this.classList.toggle('on')"><span class="sti">✈️</span>طيران</div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lb">
+    <button class="lbx" onclick="lbC()">✕</button>
+    <button class="lbarr" id="lbprev" onclick="lbN(-1)">‹</button>
+    <img id="lbimg" src="" alt="">
+    <button class="lbarr" id="lbnext" onclick="lbN(1)">›</button>
+    <div id="lbcap"></div>
+  </div>
+
+  <!-- CTX MENU -->
+  <div id="ctx">
+    <div class="cxi" onclick="ctxC()">🔄 تحديث المكتب</div>
+    <div class="cxs"></div>
+    <div class="cxi" onclick="OW('wnote');ctxC()">📝 ملاحظة جديدة</div>
+    <div class="cxi" onclick="OW('wgal');ctxC()">🖼️ فتح المعرض</div>
+    <div class="cxi" onclick="OW('wcalc');ctxC()">🔢 الحاسبة</div>
+    <div class="cxs"></div>
+    <div class="cxi" onclick="toggleDark();ctxC()">🌙 وضع داكن</div>
+    <div class="cxi" onclick="OW('wset');ctxC()">⚙️ الإعدادات</div>
+  </div>
+
+  <!-- NOTIFS -->
+  <div id="nbox"></div>
+</div>
+
+<!-- ══════ FIREBASE ══════ -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import{getFirestore,doc,setDoc,getDoc,addDoc,deleteDoc,collection,getDocs,query,orderBy}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCwEQamislxE_4ErUfm_pI6t9o320HGyVk",authDomain:"nashama-4f46e.firebaseapp.com",projectId:"nashama-4f46e",storageBucket:"nashama-4f46e.firebasestorage.app",messagingSenderId:"17029331592",appId:"1:17029331592:web:236b42d7f53e84c0ae7d3d"});
+const auth=getAuth(app),db=getFirestore(app);
+window.FB={db,doc,setDoc,getDoc,addDoc,deleteDoc,collection,getDocs,query,orderBy};
+
+onAuthStateChanged(auth,async u=>{
+  document.getElementById('lo').classList.add('off');
+  if(u){
+    window.CU=u;
+    document.getElementById('lotxt').textContent='تحميل بياناتك...';
+    await Promise.all([loadNotes(),loadGallery(),loadRec()]);
+    enterDesk(u);
+  }else{
+    window.CU=null;
+    document.getElementById('desk').classList.remove('on');
+    const ls=document.getElementById('ls');
+    ls.classList.remove('out','gone');
+    document.getElementById('lload').classList.remove('on');
+    document.getElementById('lbtn').style.display='';
+  }
+});
+
+document.getElementById('lbtn').onclick=async()=>{
+  const e=document.getElementById('lemail').value.trim(),p=document.getElementById('lpass').value;
+  const err=document.getElementById('lerr');
+  err.style.display='none';
+  if(!e||!p){showErr('يرجى إدخال البريد وكلمة المرور');return;}
+  document.getElementById('lload').classList.add('on');
+  document.getElementById('lbtn').style.display='none';
+  try{
+    if(window._reg) await createUserWithEmailAndPassword(auth,e,p);
+    else await signInWithEmailAndPassword(auth,e,p);
+  }catch(ex){
+    document.getElementById('lload').classList.remove('on');
+    document.getElementById('lbtn').style.display='';
+    const m={'auth/user-not-found':'الحساب غير موجود','auth/wrong-password':'كلمة المرور غير صحيحة','auth/email-already-in-use':'البريد مستخدم مسبقاً','auth/weak-password':'كلمة المرور ضعيفة (6 أحرف+)','auth/invalid-email':'صيغة البريد غير صحيحة','auth/too-many-requests':'محاولات كثيرة، انتظر قليلاً','auth/invalid-credential':'البريد أو كلمة المرور غير صحيحة'};
+    showErr(m[ex.code]||ex.message);
+    document.getElementById('lemail').classList.add('shake');
+    document.getElementById('lpass').classList.add('shake');
+    setTimeout(()=>{document.getElementById('lemail').classList.remove('shake');document.getElementById('lpass').classList.remove('shake');},400);
+  }
+  function showErr(msg){err.textContent=msg;err.style.display='block';}
+};
+
+document.getElementById('ltog').onclick=()=>{
+  window._reg=!window._reg;
+  document.getElementById('lbtn').textContent=window._reg?'إنشاء الحساب ←':'تسجيل الدخول ←';
+  document.getElementById('ltit').textContent=window._reg?'إنشاء حساب جديد':'تسجيل الدخول';
+  document.getElementById('ltog').innerHTML=window._reg?'لديك حساب؟ <span>تسجيل الدخول</span>':'مستخدم جديد؟ <span>إنشاء حساب مجاني</span>';
+  document.getElementById('lerr').style.display='none';
+};
+
+// ══ NOTES ══
+window.npD={};window.npC=null;
+
+async function loadNotes(){
+  if(!window.CU)return;
+  const uid=window.CU.uid;
+  try{
+    const snap=await getDocs(query(collection(db,`users/${uid}/notes`),orderBy('updatedAt','desc')));
+    window.npD={};
+    snap.forEach(d=>window.npD[d.id]={...d.data(),id:d.id});
+    npRefSel();
+    const ks=Object.keys(window.npD);
+    if(ks.length){window.npC=ks[0];document.getElementById('narea').value=window.npD[ks[0]].content||'';document.getElementById('npsel').value=ks[0];npStats();}
+  }catch(ex){console.warn('notes:',ex);}
+}
+window.loadNotes=loadNotes;
+
+function npRefSel(){
+  const s=document.getElementById('npsel'),prev=s.value;
+  s.innerHTML='';
+  Object.entries(window.npD).forEach(([id,n])=>{const o=document.createElement('option');o.value=id;o.textContent=(n.title||'ملاحظة').substring(0,34);s.appendChild(o);});
+  if(!Object.keys(window.npD).length)s.innerHTML='<option value="">لا توجد ملاحظات</option>';
+  if(prev)s.value=prev;
+}
+
+window.npLoad=function(){
+  const id=document.getElementById('npsel').value;
+  if(id&&window.npD[id]){window.npC=id;document.getElementById('narea').value=window.npD[id].content||'';document.getElementById('nptit').textContent=window.npD[id].title||'المفكرة';npStats();}
+};
+
+window.npNew=async function(){
+  if(!window.CU)return;
+  try{
+    const ref=await addDoc(collection(db,`users/${window.CU.uid}/notes`),{title:'ملاحظة جديدة',content:'',createdAt:Date.now(),updatedAt:Date.now()});
+    window.npD[ref.id]={id:ref.id,title:'ملاحظة جديدة',content:''};
+    window.npC=ref.id;
+    document.getElementById('narea').value='';
+    npRefSel();document.getElementById('npsel').value=ref.id;
+    document.getElementById('nptit').textContent='ملاحظة جديدة';
+    document.getElementById('narea').focus();
+    showN('📝','ملاحظة جديدة','جاهزة للكتابة');
+  }catch(ex){showN('❌','خطأ',ex.message);}
+};
+
+window.npSave=async function(){
+  if(!window.CU)return;
+  const content=document.getElementById('narea').value;
+  const title=content.split('\n')[0].trim().substring(0,50)||'ملاحظة بلا عنوان';
+  const uid=window.CU.uid;
+  try{
+    if(!window.npC){const ref=await addDoc(collection(db,`users/${uid}/notes`),{title,content,createdAt:Date.now(),updatedAt:Date.now()});window.npC=ref.id;window.npD[ref.id]={id:ref.id,title,content};}
+    else{await setDoc(doc(db,`users/${uid}/notes`,window.npC),{title,content,updatedAt:Date.now()},{merge:true});window.npD[window.npC]={...window.npD[window.npC],title,content};}
+    npRefSel();document.getElementById('npsel').value=window.npC;
+    document.getElementById('nptit').textContent=title;
+    ['npsv','npsv2'].forEach(id=>{const el=document.getElementById(id);el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2500);});
+  }catch(ex){showN('❌','خطأ في الحفظ',ex.message);}
+};
+
+window.npDel=async function(){
+  if(!window.CU||!window.npC)return;
+  const note=window.npD[window.npC];
+  if(!confirm(`حذف "${note?.title||'هذه الملاحظة'}"؟`))return;
+  const uid=window.CU.uid;
+  try{
+    await addDoc(collection(db,`users/${uid}/recycle`),{type:'note',title:note.title||'ملاحظة',content:note.content||'',deletedAt:Date.now()});
+    await deleteDoc(doc(db,`users/${uid}/notes`,window.npC));
+    delete window.npD[window.npC];window.npC=null;
+    document.getElementById('narea').value='';
+    npRefSel();await loadRec();
+    showN('🗑️','تم الحذف','الملاحظة في سلة المهملات');
+  }catch(ex){console.error(ex);}
+};
+
+let npT;
+document.getElementById('narea').addEventListener('input',()=>{npStats();clearTimeout(npT);npT=setTimeout(window.npSave,2000);});
+function npStats(){const v=document.getElementById('narea').value;document.getElementById('npw').textContent=(v.trim()?v.trim().split(/\s+/).length:0)+' كلمة';document.getElementById('npc').textContent=v.length+' حرف';}
+
+// ══ GALLERY ══
+window.glD={};window.glO=[];window.glView='grid';
+
+async function loadGallery(){
+  if(!window.CU)return;
+  const uid=window.CU.uid;
+  try{
+    const snap=await getDocs(query(collection(db,`users/${uid}/gallery`),orderBy('createdAt','desc')));
+    window.glD={};window.glO=[];
+    snap.forEach(d=>{window.glD[d.id]={...d.data(),id:d.id};window.glO.push(d.id);});
+    glRender();
+  }catch(ex){console.warn('gallery:',ex);}
+}
+window.loadGallery=loadGallery;
+
+window.glRender=function(){
+  const g=document.getElementById('ggrid');
+  const ks=window.glO.filter(k=>window.glD[k]);
+  document.getElementById('gcnt').textContent=ks.length+' صورة';
+  if(!ks.length){g.innerHTML='<div class="gempty"><span style="font-size:58px;display:block;margin-bottom:14px">🖼️</span>لا توجد صور<br><small style="color:#bbb;font-size:13px">اضغط "رفع صور" لإضافة صورك</small></div>';return;}
+  if(window.glView==='list'){
+    g.style.display='block';
+    g.innerHTML=ks.map((id,i)=>{const img=window.glD[id];return`<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;cursor:pointer;transition:background .12s;" onmouseover="this.style.background='rgba(0,0,0,.05)'" onmouseout="this.style.background=''" onclick="lbO(${i})">
+      <img src="${img.url}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+      <span style="flex:1;font-size:13.5px;">${img.name}</span>
+      <span style="font-size:11.5px;color:#aaa;">${img.size?Math.round(img.size/1024)+'KB':''}</span>
+      <button onclick="glDel(event,'${id}')" style="background:none;border:none;color:#c42b1c;cursor:pointer;font-size:16px;padding:4px;">🗑️</button>
+    </div>`;}).join('');
+  } else {
+    g.style.display='grid';
+    g.style.gridTemplateColumns='repeat(auto-fill,minmax(165px,1fr))';
+    g.innerHTML=ks.map((id,i)=>{const img=window.glD[id];return`<div class="gi"><img src="${img.url}" alt="${img.name}" loading="lazy" onclick="lbO(${i})"><div class="gnm">${img.name}</div><button class="gdel" onclick="glDel(event,'${id}')">✕</button></div>`;}).join('');
+  }
+};
+
+window.glUp=async function(e){
+  const files=Array.from(e.target.files);if(!files.length||!window.CU)return;
+  const uid=window.CU.uid;
+  showN('⬆️','رفع الصور...',files.length+' صورة');
+  let done=0;
+  for(const f of files){
+    const r=new FileReader();
+    r.onload=async ev=>{
+      try{
+        const ref=await addDoc(collection(db,`users/${uid}/gallery`),{name:f.name,url:ev.target.result,size:f.size,createdAt:Date.now()});
+        window.glD[ref.id]={id:ref.id,name:f.name,url:ev.target.result,size:f.size,createdAt:Date.now()};
+        window.glO.unshift(ref.id);done++;
+        window.glRender();
+        if(done===files.length)showN('✅','تم الرفع',done+' صورة محفوظة في السحابة ☁️');
+      }catch(ex){showN('❌','خطأ في الرفع',ex.message);}
+    };
+    r.readAsDataURL(f);
+  }
+  e.target.value='';
+};
+
+window.glDel=async function(e,id){
+  e.stopPropagation();if(!window.CU)return;
+  const img=window.glD[id];
+  if(!confirm(`حذف "${img?.name||'الصورة'}"؟`))return;
+  const uid=window.CU.uid;
+  try{
+    await addDoc(collection(db,`users/${uid}/recycle`),{type:'image',title:img.name,url:img.url,deletedAt:Date.now()});
+    await deleteDoc(doc(db,`users/${uid}/gallery`,id));
+    delete window.glD[id];window.glO=window.glO.filter(k=>k!==id);
+    window.glRender();await loadRec();
+    showN('🗑️','تم الحذف','الصورة في سلة المهملات');
+  }catch(ex){console.error(ex);}
+};
+
+// ══ RECYCLE ══
+window.rcD=[];
+
+async function loadRec(){
+  if(!window.CU)return;
+  const uid=window.CU.uid;
+  try{
+    const snap=await getDocs(collection(db,`users/${uid}/recycle`));
+    window.rcD=[];
+    snap.forEach(d=>window.rcD.push({fbId:d.id,...d.data()}));
+    window.rcD.sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
+    rcRender();
+  }catch(ex){console.warn('recycle:',ex);}
+}
+window.loadRec=loadRec;
+
+function rcRender(){
+  const l=document.getElementById('rclist');
+  const cnt=document.getElementById('rccount');
+  if(cnt)cnt.textContent=window.rcD.length+' عنصر';
+  if(!window.rcD.length){l.innerHTML='<div class="rcempty"><span style="font-size:58px">🗑️</span>سلة المهملات فارغة</div>';return;}
+  l.innerHTML=window.rcD.map((it,i)=>`<div class="rci">
+    <span class="rcico">${it.type==='note'?'📄':'🖼️'}</span>
+    <div class="rcnm">${it.title||'—'}</div>
+    <div class="rcdt">${it.deletedAt?new Date(it.deletedAt).toLocaleDateString('ar-SA'):''}</div>
+    <div class="rcacts">
+      <button class="rcbtn" onclick="rcRest(${i})">↩️ استعادة</button>
+      <button class="rcbtn p" onclick="rcPerm(${i})">🗑️</button>
+    </div>
+  </div>`).join('');
+}
+
+window.rcRest=async function(i){
+  if(!window.CU)return;
+  const it=window.rcD[i],uid=window.CU.uid;
+  try{
+    if(it.type==='note'){await addDoc(collection(db,`users/${uid}/notes`),{title:it.title,content:it.content||'',createdAt:Date.now(),updatedAt:Date.now()});await loadNotes();}
+    else{await addDoc(collection(db,`users/${uid}/gallery`),{name:it.title,url:it.url,createdAt:Date.now()});await loadGallery();}
+    await deleteDoc(doc(db,`users/${uid}/recycle`,it.fbId));
+    window.rcD.splice(i,1);rcRender();
+    showN('↩️','تم الاستعادة',it.title);
+  }catch(ex){console.error(ex);}
+};
+
+window.rcPerm=async function(i){
+  if(!window.CU)return;
+  const it=window.rcD[i];
+  if(!confirm(`حذف "${it.title}" نهائياً؟`))return;
+  try{
+    await deleteDoc(doc(db,`users/${window.CU.uid}/recycle`,it.fbId));
+    window.rcD.splice(i,1);rcRender();
+    showN('❌','حذف نهائي',it.title);
+  }catch(ex){console.error(ex);}
+};
+
+window.rcEmpty=async function(){
+  if(!window.CU||!window.rcD.length)return;
+  if(!confirm('إفراغ سلة المهملات نهائياً؟'))return;
+  const uid=window.CU.uid;
+  for(const it of[...window.rcD])try{await deleteDoc(doc(db,`users/${uid}/recycle`,it.fbId));}catch(ex){}
+  window.rcD=[];rcRender();showN('🗑️','تم إفراغ السلة','');
+};
+
+window.rcAll=async function(){
+  const n=window.rcD.length;if(!n)return;
+  for(let i=n-1;i>=0;i--)await window.rcRest(i);
+  if(n>0)showN('↩️','تم استعادة الكل',n+' عنصر');
+};
+
+window.doOut=async function(){
+  if(!confirm('تسجيل الخروج؟'))return;
+  ['wnote','wgal','wset','wrec','wexp','wcalc','wclk','wmus'].forEach(id=>{const w=document.getElementById(id);if(w){w.classList.remove('open','maxi');w.style.display='none';window.wSt[id]='closed';}});
+  await signOut(auth);
+  showN('👋','وداعاً!','تم تسجيل الخروج بنجاح');
+};
+</script>
+
+<!-- ══════ MAIN JS ══════ -->
+<script>
+// ═══ ENTER DESKTOP ═══
+function enterDesk(u){
+  const name=u.email.split('@')[0];
+  document.getElementById('ls').classList.add('out');
+  setTimeout(()=>document.getElementById('ls').classList.add('gone'),700);
+  document.getElementById('desk').classList.add('on');
+  ['smname','suname'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=name;});
+  const se=document.getElementById('suemail');if(se)se.textContent=u.email;
+  const sb=document.getElementById('sbrow');if(sb)sb.textContent=(navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge)[\/ ]([\d.]+)/)||['?'])[0];
+  const sm=document.getElementById('smem');if(sm&&performance.memory)sm.textContent=Math.round(performance.memory.usedJSHeapSize/1048576)+' MB';
+  showN('✅','أهلاً '+name+'! 🎉','تم تسجيل الدخول وتحميل بياناتك');
+  expGo('home',null);
+}
+
+// ═══ CLOCK ═══
+function tick(){
+  const n=new Date();
+  const t=n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  const d=n.toLocaleDateString('ar-SA',{month:'short',day:'numeric'});
+  const clock=document.getElementById('tclock');if(clock)clock.innerHTML=`<b>${t}</b><br>${d}`;
+  document.getElementById('ltime').textContent=n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('ldate').textContent=n.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  // Digital clock widget
+  const cd=document.getElementById('clkdig');if(cd)cd.textContent=n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const cdt=document.getElementById('clkdate2');if(cdt)cdt.textContent=n.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  drawAnalogClock(n);
+}
+tick();setInterval(tick,1000);
+
+// Analog Clock
+function drawAnalogClock(now){
+  const c=document.getElementById('clkCanvas');if(!c)return;
+  const ctx=c.getContext('2d'),W=160,H=160,cx=W/2,cy=H/2,R=72;
+  ctx.clearRect(0,0,W,H);
+  // Face
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+  g.addColorStop(0,'rgba(255,255,255,.06)');g.addColorStop(1,'rgba(255,255,255,.01)');
+  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=1;ctx.stroke();
+  // Ticks
+  for(let i=0;i<60;i++){
+    const a=(i/60)*Math.PI*2-Math.PI/2,len=i%5===0?10:5,r1=R-3,r2=R-3-len;
+    ctx.beginPath();
+    ctx.moveTo(cx+r1*Math.cos(a),cy+r1*Math.sin(a));
+    ctx.lineTo(cx+r2*Math.cos(a),cy+r2*Math.sin(a));
+    ctx.strokeStyle=i%5===0?'rgba(255,255,255,.7)':'rgba(255,255,255,.25)';
+    ctx.lineWidth=i%5===0?2:1;ctx.stroke();
+  }
+  // Hands
+  const h=now.getHours()%12,m=now.getMinutes(),s=now.getSeconds();
+  const ha=(h/12+m/720)*Math.PI*2-Math.PI/2;
+  const ma=(m/60+s/3600)*Math.PI*2-Math.PI/2;
+  const sa=(s/60)*Math.PI*2-Math.PI/2;
+  function hand(angle,len,w,color){
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+len*Math.cos(angle),cy+len*Math.sin(angle));
+    ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke();
+  }
+  hand(ha,38,4,'rgba(255,255,255,.95)');
+  hand(ma,54,3,'rgba(255,255,255,.9)');
+  hand(sa,58,1.5,'rgba(96,205,255,1)');
+  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+}
+
+// ═══ BG CANVAS ═══
+(function(){
+  const c=document.getElementById('bgc'),ctx=c.getContext('2d');
+  const R=()=>{c.width=innerWidth;c.height=innerHeight;};R();window.addEventListener('resize',R);
+  const pts=Array.from({length:100},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+.5,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*.5+.2}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const g=ctx.createLinearGradient(0,0,c.width,c.height);
+    g.addColorStop(0,'#0a0618');g.addColorStop(.5,'#150e3a');g.addColorStop(1,'#0d0a2e');
+    ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+    // Glow blobs
+    [[c.width*.25,c.height*.5,'rgba(0,80,180,.2)',.4],[c.width*.75,c.height*.4,'rgba(60,0,120,.15)',.35]].forEach(([x,y,col,r])=>{
+      const rg=ctx.createRadialGradient(x,y,0,x,y,c.width*r);rg.addColorStop(0,col);rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,c.width,c.height);
+    });
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>c.width)p.vx*=-1;if(p.y<0||p.y>c.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(140,200,255,${p.a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══ WINDOW MANAGER ═══
+let zT=100;
+window.wSt={};
+
+window.OW=function(id){
+  const w=document.getElementById(id);if(!w)return;
+  if(window.wSt[id]==='minimized'){w.style.display='';w.classList.add('open','popin');setTimeout(()=>w.classList.remove('popin'),250);}
+  else if(window.wSt[id]!=='open'){w.classList.add('open','popin');setTimeout(()=>w.classList.remove('popin'),250);}
+  window.wSt[id]='open';
+  w.style.zIndex=++zT;tbM(id,true);
+  if(id==='wrec')window.loadRec&&window.loadRec();
+  if(id==='wexp')expGo('home',null);
+  closeSM();
+};
+
+window.CW=function(id){
+  const w=document.getElementById(id);if(!w)return;
+  w.style.transition='opacity .15s,transform .15s';
+  w.style.opacity='0';w.style.transform='scale(.93)';
+  setTimeout(()=>{w.classList.remove('open','maxi');w.style.display='none';w.style.opacity='';w.style.transform='';w.style.transition='';window.wSt[id]='closed';},160);
+  tbM(id,false);
+};
+
+window.MW=function(id){
+  const w=document.getElementById(id);if(!w)return;
+  w.style.transition='opacity .15s,transform .15s';
+  w.style.opacity='0';w.style.transform='scale(.94) translateY(16px)';
+  setTimeout(()=>{w.classList.remove('open');w.style.display='none';w.style.opacity='';w.style.transform='';w.style.transition='';window.wSt[id]='minimized';},150);
+  tbM(id,true);
+};
+
+window.XW=function(id){
+  const w=document.getElementById(id);if(!w)return;
+  if(w.classList.contains('maxi')){
+    w.classList.remove('maxi');
+    if(w.dataset.sv){const s=JSON.parse(w.dataset.sv);Object.assign(w.style,s);}
+  }else{
+    w.dataset.sv=JSON.stringify({top:w.style.top,left:w.style.left,right:w.style.right,width:w.style.width,height:w.style.height,bottom:w.style.bottom,resize:w.style.resize||''});
+    w.style.cssText+='top:0!important;left:0!important;right:auto!important;bottom:auto!important;width:100vw!important;height:calc(100vh - var(--tb))!important;resize:none!important;';
+    w.classList.add('maxi');
+  }
+};
+
+window.togW=function(id){
+  const w=document.getElementById(id);if(!w)return;
+  if(window.wSt[id]==='minimized')OW(id);
+  else if(w.classList.contains('open')){if(+w.style.zIndex===zT)MW(id);else{w.style.zIndex=++zT;tbM(id,true);}}
+  else OW(id);
+};
+
+function tbM(id,run){const b=document.getElementById('t-'+id);if(!b)return;if(run)b.classList.add('run');else b.classList.remove('run');}
+
+document.addEventListener('mousedown',e=>{
+  const w=e.target.closest('.win');
+  if(w){w.style.zIndex=++zT;tbM(w.id,true);}
+  if(!e.target.closest('#smenu')&&!e.target.closest('#tbar>.tbb:first-child'))closeSM();
+  if(!e.target.closest('#ctx'))ctxC();
+  if(!e.target.closest('#systray')&&!e.target.closest('#tclock')&&!e.target.closest('.tnet'))closeST();
+});
+
+// Dblclick titlebar to maximize
+document.querySelectorAll('.tbar2').forEach(tb=>tb.addEventListener('dblclick',e=>{
+  if(e.target.closest('.wctrl'))return;
+  XW(tb.id.replace('tb-',''));
+}));
+
+// ═══ DRAG ═══
+let dg=null,dox=0,doy=0;
+window.SD=function(e,id){
+  if(e.target.closest('.wctrl'))return;
+  const w=document.getElementById(id);if(w.classList.contains('maxi'))return;
+  dg=id;const r=w.getBoundingClientRect();dox=e.clientX-r.left;doy=e.clientY-r.top;
+  w.style.zIndex=++zT;document.body.style.cursor='move';
+};
+document.addEventListener('mousemove',e=>{
+  if(!dg)return;
+  const w=document.getElementById(dg);
+  w.style.left=(e.clientX-dox)+'px';
+  w.style.top=Math.max(0,Math.min(e.clientY-doy,innerHeight-56))+'px';
+  w.style.right='auto';w.style.bottom='auto';
+});
+document.addEventListener('mouseup',()=>{dg=null;document.body.style.cursor='';});
+
+// ═══ START MENU ═══
+window.togSM=function(){document.getElementById('smenu').classList.toggle('open');closeST();};
+window.closeSM=function(){document.getElementById('smenu').classList.remove('open');};
+window.smFilt=function(){
+  const q=document.getElementById('smsr').value.toLowerCase();
+  document.querySelectorAll('#smg .sma').forEach(a=>a.style.display=a.textContent.toLowerCase().includes(q)?'':'none');
+};
+
+// ═══ SYSTRAY ═══
+window.togST=function(){document.getElementById('systray').classList.toggle('open');closeSM();};
+window.closeST=function(){document.getElementById('systray').classList.remove('open');};
+
+// ═══ DARK MODE ═══
+window.toggleDark=function(){
+  document.body.classList.toggle('dark');
+  const on=document.body.classList.contains('dark');
+  const tog=document.getElementById('dmTog');if(tog)on?tog.classList.add('on'):tog.classList.remove('on');
+  showN(on?'🌙':'☀️',on?'الوضع الداكن':'الوضع الفاتح','');
+};
+
+// ═══ ACCENT COLORS ═══
+const accents=['#0078d4','#28a745','#dc3545','#fd7e14','#6f42c1','#17a2b8','#e83e8c','#343a40'];
+(function(){
+  const g=document.getElementById('accentG');if(!g)return;
+  accents.forEach((c,i)=>{
+    const d=document.createElement('div');d.className='acol'+(i===0?' sel':'');
+    d.style.background=c;
+    d.onclick=()=>{
+      document.querySelectorAll('.acol').forEach(x=>x.classList.remove('sel'));
+      d.classList.add('sel');
+      document.documentElement.style.setProperty('--a',c);
+      showN('🎨','تم تغيير اللون','');
+    };
+    g.appendChild(d);
+  });
+})();
+
+// ═══ WALLPAPERS ═══
+const wps=[
+  ['https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=400&q=60','https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1920&q=80'],
+  ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80'],
+  ['https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=60','https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80'],
+  ['https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=400&q=60','https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1920&q=80'],
+  ['https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=60','https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1920&q=80'],
+  ['https://images.unsplash.com/photo-1475070929565-c985b496cb9f?w=400&q=60','https://images.unsplash.com/photo-1475070929565-c985b496cb9f?w=1920&q=80'],
+];
+(function(){
+  const g=document.getElementById('wpg');if(!g)return;
+  wps.forEach(([th,hd],i)=>{
+    const d=document.createElement('div');d.className='wpi'+(i===0?' sel':'');
+    d.innerHTML=`<img src="${th}" loading="lazy">`;
+    d.onclick=()=>{document.querySelectorAll('.wpi').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');document.getElementById('desk').style.backgroundImage=`url('${hd}')`;showN('🎨','تم تغيير الخلفية','');};
+    g.appendChild(d);
+  });
+})();
+
+window.SP=function(el,name){
+  document.querySelectorAll('.sni').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.spa').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');document.getElementById('sp-'+name)?.classList.add('on');
+};
+
+// ═══ NOTIFICATIONS ═══
+window.showN=function(icon,title,body){
+  const b=document.getElementById('nbox');
+  const n=document.createElement('div');n.className='notif';
+  n.innerHTML=`<span class="nico">${icon}</span><div class="ncon"><div class="ntit">${title}</div>${body?`<div class="nbod">${body}</div>`:''}</div>`;
+  b.appendChild(n);n.onclick=()=>{n.classList.add('out');setTimeout(()=>n.remove(),300);};
+  setTimeout(()=>{n.classList.add('out');setTimeout(()=>n.remove(),300);},4000);
+};
+
+// ═══ LIGHTBOX ═══
+let lbI=0;
+window.lbO=function(i){
+  lbI=i;const ks=(window.glO||[]).filter(k=>window.glD?.[k]);if(!ks[i])return;
+  const img=window.glD[ks[i]];
+  document.getElementById('lbimg').src=img.url;
+  document.getElementById('lbcap').textContent=img.name+' ('+(i+1)+'/'+ks.length+')';
+  document.getElementById('lb').classList.add('open');
+};
+window.lbC=function(){document.getElementById('lb').classList.remove('open');};
+window.lbN=function(d){
+  const ks=(window.glO||[]).filter(k=>window.glD?.[k]);
+  lbI=(lbI+d+ks.length)%ks.length;
+  const img=window.glD[ks[lbI]];
+  document.getElementById('lbimg').src=img.url;
+  document.getElementById('lbcap').textContent=img.name+' ('+(lbI+1)+'/'+ks.length+')';
+};
+document.getElementById('lb').onclick=e=>{if(e.target===document.getElementById('lb'))lbC();};
+
+// ═══ CTX MENU ═══
+document.getElementById('desk').addEventListener('contextmenu',e=>{
+  e.preventDefault();const m=document.getElementById('ctx');
+  m.classList.add('open');
+  m.style.left=Math.min(e.clientX,innerWidth-210)+'px';
+  m.style.top=Math.min(e.clientY,innerHeight-200)+'px';
+});
+window.ctxC=function(){document.getElementById('ctx').classList.remove('open');};
+
+// ═══ FILE EXPLORER ═══
+let expCur='home',expHist=['home'];
+window.expGo=function(sec,el){
+  if(sec==='back'){if(expHist.length>1){expHist.pop();sec=expHist[expHist.length-1];}else sec='home';}
+  else{if(expHist[expHist.length-1]!==sec)expHist.push(sec);}
+  expCur=sec;
+  document.querySelectorAll('.expsi').forEach(x=>x.classList.remove('on'));
+  if(el)el.classList.add('on');
+  else document.querySelectorAll('.expsi').forEach(x=>{
+    if((sec==='home'&&x.textContent.includes('الرئيسية'))||(sec==='notes'&&x.textContent.includes('المفكرة'))||(sec==='gallery'&&x.textContent.includes('الصور'))||(sec==='recycle'&&x.textContent.includes('المهملات')))x.classList.add('on');
+  });
+  const g=document.getElementById('expg'),a=document.getElementById('expadr');
+  const titles={'home':'هذا الكمبيوتر','notes':'هذا الكمبيوتر › المفكرة','gallery':'هذا الكمبيوتر › الصور','recycle':'هذا الكمبيوتر › المهملات'};
+  a.value=titles[sec]||sec;
+  document.getElementById('exptitle').textContent='مستكشف - '+(titles[sec]||sec);
+  if(sec==='home'){
+    g.innerHTML=`
+      <div class="expf" ondblclick="expGo('notes',null)"><div class="efico">📝</div><div class="efnm">المفكرة (${Object.keys(window.npD||{}).length})</div></div>
+      <div class="expf" ondblclick="expGo('gallery',null)"><div class="efico">🖼️</div><div class="efnm">الصور (${(window.glO||[]).length})</div></div>
+      <div class="expf" ondblclick="expGo('recycle',null)"><div class="efico">🗑️</div><div class="efnm">المهملات (${(window.rcD||[]).length})</div></div>
+      <div class="expf" ondblclick="OW('wset')"><div class="efico">⚙️</div><div class="efnm">الإعدادات</div></div>
+      <div class="expf" ondblclick="OW('wcalc')"><div class="efico">🔢</div><div class="efnm">الحاسبة</div></div>`;
+  }else if(sec==='notes'){
+    const ks=Object.keys(window.npD||{});
+    g.innerHTML=ks.length?ks.map(id=>`<div class="expf" ondblclick="OW('wnote')"><div class="efico">📄</div><div class="efnm">${((window.npD[id]?.title)||'ملاحظة').substring(0,18)}</div></div>`).join(''):'<div style="padding:24px;color:#bbb;font-size:13px">لا توجد ملاحظات</div>';
+  }else if(sec==='gallery'){
+    const ks=(window.glO||[]).filter(k=>window.glD?.[k]);
+    g.innerHTML=ks.length?ks.map((id,i)=>`<div class="expf" onclick="lbO(${i})"><img src="${window.glD[id].url}" style="width:74px;height:74px;object-fit:cover;border-radius:8px;margin-bottom:4px;"><div class="efnm">${(window.glD[id].name||'صورة').substring(0,16)}</div></div>`).join(''):'<div style="padding:24px;color:#bbb;font-size:13px">لا توجد صور</div>';
+  }else if(sec==='recycle'){
+    const items=window.rcD||[];
+    g.innerHTML=items.length?items.map((it,i)=>`<div class="expf"><div class="efico">${it.type==='note'?'📄':'🖼️'}</div><div class="efnm">${(it.title||'—').substring(0,16)}</div></div>`).join(''):'<div style="padding:24px;color:#bbb;font-size:13px">السلة فارغة</div>';
+  }
+  document.getElementById('expsrch').value='';
+};
+
+window.expSearch=function(){
+  const q=document.getElementById('expsrch').value.toLowerCase();if(!q){expGo(expCur,null);return;}
+  const g=document.getElementById('expg');
+  const all=[...Object.entries(window.npD||{}).map(([id,n])=>({type:'note',id,name:n.title||'ملاحظة'})),...(window.glO||[]).filter(k=>window.glD?.[k]).map((id,i)=>({type:'image',id,i,name:window.glD[id].name}))];
+  const res=all.filter(x=>x.name.toLowerCase().includes(q));
+  g.innerHTML=res.length?res.map(x=>x.type==='note'?`<div class="expf" ondblclick="OW('wnote')"><div class="efico">📄</div><div class="efnm">${x.name.substring(0,18)}</div></div>`:`<div class="expf" onclick="lbO(${x.i})"><img src="${window.glD[x.id].url}" style="width:74px;height:74px;object-fit:cover;border-radius:8px;margin-bottom:4px;"><div class="efnm">${x.name.substring(0,16)}</div></div>`).join(''):'<div style="padding:24px;color:#bbb;font-size:13px">لا توجد نتائج لـ "'+q+'"</div>';
+};
+
+// ═══ CALCULATOR ═══
+let calExpr='',calCur='0',calNew=true;
+
+window.calIn=function(v){
+  if(v==='+/-'){calCur=(parseFloat(calCur)*-1).toString();updCal();return;}
+  if(calNew&&!isNaN(v)&&v!=='.'){calCur=v;calNew=false;}
+  else if(isNaN(v)||v==='.'){
+    if(['+','-','*','/','%'].includes(v)){calExpr=calCur+(v==='*'?'×':v==='/'?'÷':v);calNew=true;}
+    else{calCur+=v;}
+  }else{if(calCur==='0'&&v!=='.')calCur=v;else calCur+=v;}
+  updCal();
+};
+window.calDel=function(){calCur=calCur.length>1?calCur.slice(0,-1):'0';updCal();};
+window.calC=function(){calCur='0';calExpr='';calNew=true;updCal();};
+window.calEq=function(){
+  const expr=calExpr.replace('×','*').replace('÷','/')+calCur;
+  try{
+    const res=Function('"use strict";return('+expr+')')();
+    document.getElementById('calexpr').textContent=expr+'=';
+    calCur=parseFloat(res.toFixed(10)).toString();
+    calExpr='';calNew=true;
+  }catch{calCur='خطأ';calNew=true;}
+  updCal();
+};
+function updCal(){
+  document.getElementById('caldisp').textContent=calCur;
+  if(!calExpr)document.getElementById('calexpr').textContent='';
+  else if(calExpr&&!document.getElementById('calexpr').textContent.includes('='))document.getElementById('calexpr').textContent=calExpr;
+}
+document.addEventListener('keydown',e=>{
+  const calc=document.getElementById('wcalc');if(!calc||!calc.classList.contains('open'))return;
+  if(e.key>='0'&&e.key<='9')calIn(e.key);
+  else if(['+','-','*','/'].includes(e.key))calIn(e.key);
+  else if(e.key==='Enter'||e.key==='=')calEq();
+  else if(e.key==='Backspace')calDel();
+  else if(e.key==='Escape')calC();
+  else if(e.key==='.')calIn('.');
+});
+
+// ═══ NOTEPAD FONT TOGGLE ═══
+window.npToggleFmt=function(){
+  const a=document.getElementById('narea');
+  const btn=document.getElementById('npFmtBtn');
+  if(a.style.fontWeight==='bold'){a.style.fontWeight='';btn.style.fontWeight='';}
+  else{a.style.fontWeight='bold';btn.style.fontWeight='bold';}
+};
+
+// ═══ MUSIC PLAYER ═══
+let musAudio=null,musPlaying=false,musShuffle=false,musRepeatMode=false;
+window.musLoad=function(e){
+  const f=e.target.files[0];if(!f)return;
+  if(musAudio){musAudio.pause();musAudio=null;}
+  musAudio=new Audio(URL.createObjectURL(f));
+  musAudio.volume=document.getElementById('musvol').value/100;
+  document.getElementById('mustit').textContent=f.name.replace(/\.[^.]+$/,'');
+  document.getElementById('musart2').textContent=Math.round(f.size/1024)+' KB';
+  musAudio.addEventListener('timeupdate',()=>{
+    const p=(musAudio.currentTime/musAudio.duration)*100||0;
+    document.getElementById('musbar').style.width=p+'%';
+    document.getElementById('muscur').textContent=fmtTime(musAudio.currentTime);
+    document.getElementById('mustot').textContent=fmtTime(musAudio.duration);
+  });
+  musAudio.addEventListener('ended',()=>{
+    if(musRepeatMode){musAudio.currentTime=0;musAudio.play();}
+    else{musStop();}
+  });
+  musPlay();
+};
+function musPlay(){musAudio?.play();musPlaying=true;document.getElementById('musPbtn').textContent='⏸';document.getElementById('musart').classList.add('spin');}
+function musStop(){musPlaying=false;document.getElementById('musPbtn').textContent='▶';document.getElementById('musart').classList.remove('spin');}
+window.musToggle=function(){if(!musAudio)return;if(musPlaying){musAudio.pause();musStop();}else{musPlay();}};
+window.musPrev=function(){if(musAudio)musAudio.currentTime=Math.max(0,musAudio.currentTime-10);};
+window.musNext=function(){if(musAudio)musAudio.currentTime=Math.min(musAudio.duration,musAudio.currentTime+10);};
+window.musShuffle=function(){musShuffle=!musShuffle;document.getElementById('musShuf').style.opacity=musShuffle?.5:1;};
+window.musRepeat=function(){musRepeatMode=!musRepeatMode;document.getElementById('musRep').style.opacity=musRepeatMode?1:.4;};
+window.musVol=function(v){if(musAudio)musAudio.volume=v/100;};
+window.musSeek=function(e){
+  if(!musAudio||!musAudio.duration)return;
+  const r=e.currentTarget.getBoundingClientRect();
+  musAudio.currentTime=((e.clientX-r.left)/r.width)*musAudio.duration;
+};
+function fmtTime(s){if(!s||isNaN(s))return'0:00';const m=Math.floor(s/60),ss=Math.floor(s%60);return m+':'+(ss<10?'0':'')+ss;}
+
+// ═══ KEYBOARD ═══
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('ls').classList.contains('gone')&&!document.getElementById('ls').classList.contains('out'))return;
+  if(e.ctrlKey&&e.key==='s'){e.preventDefault();window.npSave&&npSave();}
+  if(e.key==='Escape'){closeSM();ctxC();lbC();closeST();}
+  if(e.key==='ArrowLeft'&&document.getElementById('lb').classList.contains('open'))lbN(1);
+  if(e.key==='ArrowRight'&&document.getElementById('lb').classList.contains('open'))lbN(-1);
+  if(e.key==='F11'){e.preventDefault();const w=document.fullscreenElement;w?document.exitFullscreen():document.documentElement.requestFullscreen();}
+});
+['lemail','lpass'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lbtn').click();}));
+</script>
+</body>
+</html>
