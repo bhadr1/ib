@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Win 11 Web</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -23,6 +23,9 @@ textarea,input,select{user-select:text;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes nIn{from{opacity:0;transform:translateX(24px) scale(.94)}to{opacity:1;transform:translateX(0) scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.3)}28%{transform:scale(1)}42%{transform:scale(1.15)}70%{transform:scale(1)}}
+@keyframes floatHeart{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(0.4)}}
+@keyframes lovePulse{0%,100%{box-shadow:0 0 20px rgba(255,100,150,.4)}50%{box-shadow:0 0 50px rgba(255,100,150,.9),0 0 80px rgba(255,60,120,.4)}}
 
 /* ══ LOADING ══ */
 #lo{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
@@ -93,6 +96,37 @@ body.dark .calbtn.op{background:rgba(0,120,212,.25);color:var(--a2);}
 body.dark .caldis{background:rgba(18,18,24,.95);color:#e8e8e8;}
 body.dark .calheader{background:rgba(30,30,40,.8);}
 
+/* ══ RESPONSIVE / MOBILE ══ */
+@media(max-width:768px){
+  .ltime{font-size:60px;}
+  .lcard{width:94vw;padding:28px 22px;}
+  .win{width:100vw!important;height:calc(100vh - var(--tb))!important;top:0!important;left:0!important;right:0!important;border-radius:0!important;resize:none!important;}
+  .win.maxi{height:calc(100vh - var(--tb))!important;}
+  #tbar{gap:0;justify-content:flex-start;overflow-x:auto;padding:0 4px;}
+  .tbb{width:38px;font-size:19px;}
+  #tr{position:relative;right:auto;margin-right:auto;}
+  #smenu{width:96vw;left:2vw;transform:none;}
+  #smenu.open{transform:none;}
+  .setwrap{flex-direction:column;}
+  .setnav{width:100%;flex-direction:row;overflow-x:auto;border-left:none;border-bottom:1px solid rgba(0,0,0,.07);}
+  .sni{white-space:nowrap;font-size:12px;padding:8px 10px;}
+  .expbody{flex-direction:column;}
+  .expside{width:100%;height:60px;flex-direction:row;overflow-x:auto;padding:4px;}
+  .expg{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));}
+  #systray{width:96vw;right:2vw;}
+  #ctx{font-size:13px;}
+  .lovebody{padding:12px!important;}
+  .lovestats{grid-template-columns:repeat(2,1fr)!important;}
+  .quiz-header{padding:14px!important;}
+  .quiz-q-card{padding:16px!important;}
+  #wlove,#wquiz{width:100vw!important;height:calc(100vh - var(--tb))!important;top:0!important;left:0!important;}
+}
+@media(max-width:480px){
+  .lovestats{grid-template-columns:1fr 1fr!important;gap:8px!important;}
+  .lovestat-val{font-size:22px!important;}
+  .love-heart-big{font-size:80px!important;}
+}
+
 /* ══ DESKTOP ICONS ══ */
 .di{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:10px 8px;border-radius:10px;width:86px;transition:background .15s;}
 .di:hover{background:rgba(255,255,255,.22);}
@@ -158,7 +192,7 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 
 /* ══ GALLERY ══ */
 #wgal{width:860px;height:570px;top:70px;left:160px;}
-.gltb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.gltb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-wrap:wrap;}
 .glbtn{padding:7px 16px;border-radius:7px;border:1px solid rgba(0,0,0,.12);background:#fff;cursor:pointer;font-size:13px;font-family:var(--fn);transition:all .12s;}
 .glbtn:hover{background:#f0f0f0;border-color:rgba(0,0,0,.2);}
 .glcnt{font-size:13px;color:#777;margin-right:auto;}
@@ -215,13 +249,13 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 .wpi.sel{border-color:var(--a);}
 .wpi img{width:100%;height:100%;object-fit:cover;}
 .accent-g{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-.acol{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s;flex-shrink:0;}
+.acol{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15px;flex-shrink:0;}
 .acol:hover{transform:scale(1.15);}
 .acol.sel{border-color:#fff;box-shadow:0 0 0 2px var(--a);}
 
 /* ══ RECYCLE BIN ══ */
 #wrec{width:700px;height:490px;top:90px;left:160px;}
-.rctb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.rctb{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-wrap:wrap;}
 .rclist{padding:8px;overflow-y:auto;flex:1;}
 .rci{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;font-size:13.5px;transition:background .12s;}
 .rci:hover{background:rgba(0,0,0,.05);}
@@ -237,10 +271,10 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 
 /* ══ FILE EXPLORER ══ */
 #wexp{width:880px;height:560px;top:70px;left:100px;}
-.exptb{display:flex;align-items:center;gap:6px;padding:7px 12px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;}
+.exptb{display:flex;align-items:center;gap:6px;padding:7px 12px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-wrap:wrap;}
 .expnav{width:32px;height:32px;border-radius:6px;border:1px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .12s;}
 .expnav:hover{background:#f0f0f0;}
-.expadr{flex:1;padding:7px 14px;border:1px solid rgba(0,0,0,.12);border-radius:7px;background:#fff;font-size:13px;font-family:var(--fn);outline:none;color:#333;}
+.expadr{flex:1;padding:7px 14px;border:1px solid rgba(0,0,0,.12);border-radius:7px;background:#fff;font-size:13px;font-family:var(--fn);outline:none;color:#333;min-width:0;}
 .expsrch{padding:7px 14px;border:1px solid rgba(0,0,0,.12);border-radius:7px;background:#fff;font-size:13px;font-family:var(--fn);outline:none;width:180px;}
 .expbody{display:flex;flex:1;overflow:hidden;}
 .expside{width:205px;background:rgba(255,255,255,.32);border-left:1px solid rgba(0,0,0,.07);padding:10px 6px;overflow-y:auto;flex-shrink:0;}
@@ -272,7 +306,7 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 .calbtn.wide{grid-column:span 2;}
 .calheader{padding:8px 14px;font-size:12px;color:#888;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.06);flex-shrink:0;}
 
-/* ══ CLOCK/WIDGET ══ */
+/* ══ CLOCK ══ */
 #wclk{width:310px;height:320px;top:110px;left:820px;resize:none;}
 .clkbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:linear-gradient(135deg,#0f2744,#1a4a7e);}
 #clockFace{position:relative;width:160px;height:160px;}
@@ -300,6 +334,111 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 .musvol span{font-size:14px;color:rgba(255,255,255,.5);}
 .musvol input{flex:1;accent-color:var(--a2);}
 
+/* ══ LOVE COUNTER ══ */
+#wlove{width:500px;height:580px;top:80px;left:200px;resize:none;}
+.lovebody{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px;background:linear-gradient(160deg,#1a0a1e,#2d0f35,#1a0a1e);position:relative;overflow:hidden;}
+.lovebody::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(255,80,150,.15) 0%,transparent 60%);pointer-events:none;}
+.love-heart-big{font-size:90px;animation:heartbeat 1.5s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,80,150,.6));line-height:1;cursor:pointer;}
+.love-names{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;color:#fff;}
+.love-names .lv-n{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:6px 16px;border-radius:20px;cursor:pointer;}
+.love-names .lv-n:hover{background:rgba(255,100,150,.2);}
+.love-sep{font-size:22px;color:#ff6b9d;}
+.love-since{font-size:13px;color:rgba(255,255,255,.5);text-align:center;}
+.love-timer{font-size:28px;font-weight:700;color:#fff;letter-spacing:2px;text-align:center;background:rgba(255,255,255,.06);padding:14px 24px;border-radius:16px;border:1px solid rgba(255,100,150,.2);width:100%;animation:lovePulse 3s ease-in-out infinite;}
+.love-timer-sub{font-size:12px;color:rgba(255,255,255,.4);text-align:center;margin-top:-10px;}
+.lovestats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;}
+.lovestat{background:rgba(255,255,255,.06);border:1px solid rgba(255,100,150,.15);border-radius:12px;padding:14px 10px;text-align:center;}
+.lovestat-val{font-size:26px;font-weight:700;color:#ff6b9d;display:block;}
+.lovestat-lbl{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;display:block;}
+.love-setup{width:100%;display:flex;flex-direction:column;gap:10px;}
+.love-setup input{width:100%;padding:11px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-size:14px;font-family:var(--fn);outline:none;}
+.love-setup input::placeholder{color:rgba(255,255,255,.3);}
+.love-setup input:focus{border-color:rgba(255,100,150,.5);background:rgba(255,100,150,.08);}
+.love-btn{padding:12px 24px;background:linear-gradient(135deg,#c42b7a,#e8457a);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--fn);transition:all .2s;box-shadow:0 4px 20px rgba(196,43,122,.4);}
+.love-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(196,43,122,.5);}
+.love-anniversary{background:rgba(255,100,150,.08);border:1px solid rgba(255,100,150,.2);border-radius:12px;padding:12px 16px;width:100%;text-align:center;}
+.love-anniversary h4{color:#ff6b9d;font-size:13px;margin-bottom:6px;}
+.love-anniversary p{color:rgba(255,255,255,.6);font-size:12px;}
+.hearts-float{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.fheart{position:absolute;font-size:20px;animation:floatHeart 2s ease-in forwards;}
+body.dark #wlove .lovebody{}
+
+/* ══ QUIZ APP ══ */
+#wquiz{width:760px;height:580px;top:80px;left:160px;}
+.quiz-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.quiz-tabs{display:flex;border-bottom:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.42);flex-shrink:0;}
+.quiz-tab{padding:11px 20px;cursor:pointer;font-size:13px;font-weight:500;color:#888;border-bottom:2px solid transparent;transition:all .15s;}
+.quiz-tab.on{color:var(--a);border-bottom-color:var(--a);}
+.quiz-panel{display:none;flex:1;overflow-y:auto;padding:18px;}
+.quiz-panel.on{display:flex;flex-direction:column;gap:12px;}
+/* Create Panel */
+.quiz-q-card{background:rgba(255,255,255,.7);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:18px;position:relative;}
+.quiz-q-num{font-size:11px;color:#aaa;font-weight:700;margin-bottom:8px;}
+.quiz-q-inp{width:100%;padding:10px 14px;border:1px solid rgba(0,0,0,.12);border-radius:8px;font-size:14px;font-family:var(--fn);outline:none;margin-bottom:10px;}
+.quiz-q-inp:focus{border-color:var(--a);}
+.quiz-opts{display:flex;flex-direction:column;gap:6px;}
+.quiz-opt-row{display:flex;gap:8px;align-items:center;}
+.quiz-opt-inp{flex:1;padding:8px 12px;border:1px solid rgba(0,0,0,.12);border-radius:7px;font-size:13px;font-family:var(--fn);outline:none;}
+.quiz-opt-inp:focus{border-color:var(--a);}
+.quiz-correct-btn{width:28px;height:28px;border-radius:50%;border:2px solid #ccc;cursor:pointer;background:transparent;flex-shrink:0;transition:all .15s;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.quiz-correct-btn.sel{border-color:#28a745;background:#28a745;color:#fff;}
+.quiz-del-q{position:absolute;top:10px;left:10px;background:none;border:none;cursor:pointer;color:#ccc;font-size:16px;padding:4px;}
+.quiz-del-q:hover{color:#c42b1c;}
+.quiz-add-q{padding:11px;border:2px dashed rgba(0,120,212,.3);border-radius:10px;background:transparent;color:var(--a);font-size:14px;font-family:var(--fn);cursor:pointer;transition:all .15s;font-weight:500;}
+.quiz-add-q:hover{background:rgba(0,120,212,.06);border-color:var(--a);}
+.quiz-header{display:flex;gap:10px;padding:14px 18px;background:rgba(255,255,255,.42);border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-wrap:wrap;align-items:center;}
+.quiz-header input{flex:1;padding:9px 14px;border:1px solid rgba(0,0,0,.12);border-radius:8px;font-family:var(--fn);font-size:14px;outline:none;min-width:150px;}
+.quiz-header input:focus{border-color:var(--a);}
+.quiz-save-btn{padding:9px 20px;background:var(--a);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:var(--fn);font-weight:600;transition:all .15s;}
+.quiz-save-btn:hover{background:#0086f0;}
+/* My Quizzes Panel */
+.quiz-list-item{background:rgba(255,255,255,.7);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+.quiz-list-item:hover{background:rgba(255,255,255,.9);}
+.qlinfo{flex:1;}
+.qltit{font-size:15px;font-weight:600;color:#222;}
+.qlsub{font-size:12px;color:#aaa;margin-top:3px;}
+.qlacts{display:flex;gap:8px;}
+.qlbtn{padding:7px 14px;border-radius:7px;border:1px solid rgba(0,0,0,.12);background:#fff;cursor:pointer;font-size:12px;font-family:var(--fn);transition:all .12s;}
+.qlbtn:hover{background:#f0f0f0;}
+.qlbtn.share{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.25);color:var(--a);}
+.qlbtn.share:hover{background:rgba(0,120,212,.18);}
+.qlbtn.del{border-color:rgba(196,43,28,.2);color:#c42b1c;}
+.qlbtn.del:hover{background:#fff0ee;}
+/* Results Panel */
+.quiz-result-item{background:rgba(255,255,255,.7);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:14px 16px;}
+.qr-name{font-size:15px;font-weight:600;color:#222;}
+.qr-score{font-size:13px;color:var(--a);font-weight:600;}
+.qr-date{font-size:11px;color:#aaa;}
+.qr-bar{height:6px;background:#e0e7ef;border-radius:3px;margin-top:8px;overflow:hidden;}
+.qr-bar-fill{height:100%;background:linear-gradient(90deg,var(--a),var(--a2));border-radius:3px;transition:width .5s ease;}
+/* Take Quiz Overlay */
+#quizTake{position:fixed;inset:0;z-index:7000;display:none;flex-direction:column;background:linear-gradient(160deg,#f0f4ff,#e8f0fe);align-items:center;justify-content:flex-start;overflow-y:auto;padding:20px 16px 40px;}
+#quizTake.open{display:flex;animation:fadeIn .3s;}
+.qt-header{text-align:center;margin-bottom:24px;width:100%;max-width:600px;}
+.qt-title{font-size:24px;font-weight:700;color:#222;}
+.qt-sub{font-size:14px;color:#888;margin-top:6px;}
+.qt-name-screen{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:500px;box-shadow:0 8px 32px rgba(0,0,0,.1);display:flex;flex-direction:column;gap:14px;align-items:center;}
+.qt-name-inp{width:100%;padding:13px 18px;border:2px solid #e0e7ef;border-radius:10px;font-size:15px;font-family:var(--fn);outline:none;}
+.qt-name-inp:focus{border-color:var(--a);}
+.qt-start-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--a),#005fa3);border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--fn);}
+.qt-q-card{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:600px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:14px;}
+.qt-q-num{font-size:12px;color:#aaa;font-weight:600;margin-bottom:8px;}
+.qt-q-txt{font-size:17px;font-weight:600;color:#222;margin-bottom:18px;line-height:1.6;}
+.qt-options{display:flex;flex-direction:column;gap:10px;}
+.qt-opt{padding:13px 18px;border:2px solid #e0e7ef;border-radius:10px;cursor:pointer;font-size:14px;font-family:var(--fn);transition:all .15s;background:#fff;text-align:right;}
+.qt-opt:hover{border-color:var(--a);background:rgba(0,120,212,.04);}
+.qt-opt.sel{border-color:var(--a);background:rgba(0,120,212,.08);color:var(--a);font-weight:600;}
+.qt-opt.right{border-color:#28a745;background:rgba(40,167,69,.1);color:#28a745;}
+.qt-opt.wrong{border-color:#c42b1c;background:rgba(196,43,28,.08);color:#c42b1c;}
+.qt-next-btn{width:100%;padding:13px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--fn);max-width:600px;transition:background .15s;}
+.qt-next-btn:hover{background:#0086f0;}
+.qt-result-screen{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:500px;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.qt-score-big{font-size:80px;font-weight:800;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.qt-score-txt{font-size:16px;color:#666;}
+.qt-close-btn{padding:13px 32px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--fn);}
+.qt-progress{width:100%;max-width:600px;background:rgba(0,0,0,.1);border-radius:4px;height:4px;margin-bottom:8px;}
+.qt-progress-bar{height:100%;background:var(--a);border-radius:4px;transition:width .3s;}
+
 /* ══ NOTIF PANEL ══ */
 #nbox{position:fixed;top:14px;right:14px;z-index:8000;display:flex;flex-direction:column;gap:8px;width:320px;}
 .notif{background:rgba(248,248,248,.97);backdrop-filter:blur(20px);border-radius:14px;padding:14px 16px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);display:flex;gap:12px;align-items:flex-start;animation:nIn .28s cubic-bezier(.34,1.3,.64,1);}
@@ -316,7 +455,7 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
 .cxi:hover{background:rgba(0,120,212,.1);color:var(--a);}
 .cxs{height:1px;background:rgba(0,0,0,.07);margin:4px 0;}
 
-/* ══ SYSTRAY POPUP ══ */
+/* ══ SYSTRAY ══ */
 #systray{position:fixed;bottom:calc(var(--tb)+8px);right:8px;width:360px;background:rgba(243,243,243,.94);backdrop-filter:blur(40px);border-radius:16px;border:1px solid rgba(0,0,0,.09);box-shadow:var(--sh);padding:20px;z-index:800;display:none;}
 #systray.open{display:block;animation:slideUp .18s ease;}
 .strow{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
@@ -385,6 +524,12 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
   </div>
   <div class="di" style="top:510px;right:20px" ondblclick="OW('wcalc')">
     <div class="ico">🔢</div><div class="lbl">الحاسبة</div>
+  </div>
+  <div class="di" style="top:20px;right:118px" ondblclick="OW('wlove')">
+    <div class="ico">💕</div><div class="lbl">عداد الحب</div>
+  </div>
+  <div class="di" style="top:118px;right:118px" ondblclick="OW('wquiz')">
+    <div class="ico">📋</div><div class="lbl">اختبارنا</div>
   </div>
 
   <!-- ══════════ NOTEPAD ══════════ -->
@@ -511,6 +656,8 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
             <div class="srow"><span>🔢 الحاسبة</span><button class="glbtn" onclick="OW('wcalc')">فتح</button></div>
             <div class="srow"><span>🕐 الساعة</span><button class="glbtn" onclick="OW('wclk')">فتح</button></div>
             <div class="srow"><span>🎵 الموسيقى</span><button class="glbtn" onclick="OW('wmus')">فتح</button></div>
+            <div class="srow"><span>💕 عداد الحب</span><button class="glbtn" onclick="OW('wlove')">فتح</button></div>
+            <div class="srow"><span>📋 اختبارنا</span><button class="glbtn" onclick="OW('wquiz')">فتح</button></div>
           </div>
         </div>
         <div class="spa" id="sp-sys">
@@ -688,6 +835,111 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
     </div>
   </div>
 
+  <!-- ══════════ LOVE COUNTER ══════════ -->
+  <div class="win" id="wlove">
+    <div class="tbar2" id="tb-wlove" onmousedown="SD(event,'wlove')">
+      <span class="t-ico">💕</span>
+      <span class="t-tit">عداد الحب</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wlove')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wlove')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wlove')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="lovebody" id="lovebody">
+      <div class="hearts-float" id="heartsFloat"></div>
+      <div id="loveSetupDiv">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:60px;animation:heartbeat 1.5s ease-in-out infinite;line-height:1;">💕</div>
+          <div style="color:#ff9ec8;font-size:16px;margin-top:8px;font-weight:600;">إعداد عداد الحب</div>
+        </div>
+        <div class="love-setup">
+          <input id="loveName1" placeholder="اسمك 💛" maxlength="20">
+          <input id="loveName2" placeholder="اسم حبيبك 💕" maxlength="20">
+          <label style="color:rgba(255,255,255,.5);font-size:13px;">📅 تاريخ البداية:</label>
+          <input id="loveDate" type="date" style="color:#fff;background:rgba(255,255,255,.08);">
+          <button class="love-btn" onclick="loveSave()">💾 حفظ وبدء العداد</button>
+        </div>
+      </div>
+      <div id="loveMainDiv" style="display:none;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <div class="love-heart-big" onclick="loveSpawnHearts()" title="اضغط لتطير القلوب">💕</div>
+        <div class="love-names">
+          <span class="lv-n" id="lvn1">سوسو</span>
+          <span class="love-sep">❤️</span>
+          <span class="lv-n" id="lvn2">بدر</span>
+        </div>
+        <div class="love-timer" id="loveTimer">0 يوم، 0 ساعة، 0 دقيقة</div>
+        <div class="love-timer-sub" id="loveTimerSub">منذ بداية قصتنا الجميلة ✨</div>
+        <div class="lovestats" id="lovestats">
+          <div class="lovestat"><span class="lovestat-val" id="lvdays">0</span><span class="lovestat-lbl">يوم</span></div>
+          <div class="lovestat"><span class="lovestat-val" id="lvhours">0</span><span class="lovestat-lbl">ساعة</span></div>
+          <div class="lovestat"><span class="lovestat-val" id="lvmins">0</span><span class="lovestat-lbl">دقيقة</span></div>
+          <div class="lovestat"><span class="lovestat-val" id="lvmonths">0</span><span class="lovestat-lbl">شهر</span></div>
+          <div class="lovestat"><span class="lovestat-val" id="lvyears">0</span><span class="lovestat-lbl">سنة</span></div>
+          <div class="lovestat"><span class="lovestat-val" id="lvsecs">0</span><span class="lovestat-lbl">ثانية</span></div>
+        </div>
+        <div class="love-anniversary" id="loveAnniv">
+          <h4>🎉 الذكرى القادمة</h4>
+          <p id="loveAnnivTxt">–</p>
+        </div>
+        <button class="love-btn" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);box-shadow:none;font-size:12px;padding:8px 18px;" onclick="loveReset()">✏️ تعديل المعلومات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ QUIZ APP ══════════ -->
+  <div class="win" id="wquiz">
+    <div class="tbar2" id="tb-wquiz" onmousedown="SD(event,'wquiz')">
+      <span class="t-ico">📋</span>
+      <span class="t-tit">اختبارنا</span>
+      <div class="wctrl">
+        <button class="wb" onclick="MW('wquiz')" title="تصغير"><svg viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg></button>
+        <button class="wb" onclick="XW('wquiz')" title="تكبير"><svg viewBox="0 0 10 10"><rect width="9" height="9" x=".5" y=".5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+        <button class="wb cls" onclick="CW('wquiz')" title="إغلاق"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="#555" stroke-width="1.4"/><line x1="10" y1="0" x2="0" y2="10" stroke="#555" stroke-width="1.4"/></svg></button>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-header">
+        <input id="quizTitleInp" placeholder="📝 عنوان الاختبار..." maxlength="60">
+        <button class="quiz-save-btn" onclick="quizSaveAll()">💾 حفظ الاختبار</button>
+      </div>
+      <div class="quiz-tabs">
+        <div class="quiz-tab on" onclick="quizTab(this,'create')">✏️ إنشاء</div>
+        <div class="quiz-tab" onclick="quizTab(this,'myquizzes')">📚 اختباراتي</div>
+        <div class="quiz-tab" onclick="quizTab(this,'results')">📊 النتائج</div>
+      </div>
+      <!-- CREATE -->
+      <div class="quiz-panel on" id="qp-create">
+        <div id="quiz-questions-list"></div>
+        <button class="quiz-add-q" onclick="quizAddQ()">➕ إضافة سؤال جديد</button>
+      </div>
+      <!-- MY QUIZZES -->
+      <div class="quiz-panel" id="qp-myquizzes">
+        <div id="quiz-my-list"><div style="text-align:center;color:#bbb;padding:40px;font-size:14px">لا توجد اختبارات محفوظة</div></div>
+      </div>
+      <!-- RESULTS -->
+      <div class="quiz-panel" id="qp-results">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="quizResultSel" style="padding:8px 12px;border:1px solid rgba(0,0,0,.12);border-radius:7px;font-family:var(--fn);font-size:13px;outline:none;" onchange="quizLoadResults()">
+            <option value="">اختر اختباراً...</option>
+          </select>
+          <span id="quizResultCount" style="font-size:13px;color:#888;"></span>
+        </div>
+        <div id="quiz-results-list"><div style="text-align:center;color:#bbb;padding:40px;font-size:14px">اختر اختباراً لعرض نتائجه</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAKE QUIZ OVERLAY -->
+  <div id="quizTake">
+    <div class="qt-header">
+      <div class="qt-title" id="qtTitle">الاختبار</div>
+      <div class="qt-sub" id="qtSub">أجب على الأسئلة التالية</div>
+    </div>
+    <div class="qt-progress"><div class="qt-progress-bar" id="qtProg"></div></div>
+    <div id="qtContent" style="width:100%;max-width:600px;"></div>
+  </div>
+
   <!-- TASKBAR -->
   <div id="tbar">
     <div class="tbb" style="font-size:21px" onclick="togSM()">⊞</div>
@@ -699,6 +951,8 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
     <div class="tbb" id="t-wcalc" onclick="togW('wcalc')" title="الحاسبة">🔢</div>
     <div class="tbb" id="t-wclk"  onclick="togW('wclk')"  title="الساعة">🕐</div>
     <div class="tbb" id="t-wmus"  onclick="togW('wmus')"  title="الموسيقى">🎵</div>
+    <div class="tbb" id="t-wlove" onclick="togW('wlove')" title="عداد الحب">💕</div>
+    <div class="tbb" id="t-wquiz" onclick="togW('wquiz')" title="اختبارنا">📋</div>
     <div id="tr">
       <div class="tdm" onclick="toggleDark()" title="وضع داكن">🌙</div>
       <div class="tnet" onclick="togST()" title="الشبكة">🌐</div>
@@ -719,6 +973,8 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
       <div class="sma" ondblclick="OW('wcalc');closeSM()"><div class="si">🔢</div><span>الحاسبة</span></div>
       <div class="sma" ondblclick="OW('wclk');closeSM()"><div class="si">🕐</div><span>الساعة</span></div>
       <div class="sma" ondblclick="OW('wmus');closeSM()"><div class="si">🎵</div><span>الموسيقى</span></div>
+      <div class="sma" ondblclick="OW('wlove');closeSM()"><div class="si">💕</div><span>عداد الحب</span></div>
+      <div class="sma" ondblclick="OW('wquiz');closeSM()"><div class="si">📋</div><span>اختبارنا</span></div>
     </div>
     <div class="smbot">
       <div class="smuser">
@@ -729,7 +985,7 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
     </div>
   </div>
 
-  <!-- SYSTRAY POPUP -->
+  <!-- SYSTRAY -->
   <div id="systray">
     <div class="strow">
       <span style="font-size:18px">🌐</span>
@@ -771,7 +1027,8 @@ body.dark .calheader{background:rgba(30,30,40,.8);}
     <div class="cxs"></div>
     <div class="cxi" onclick="OW('wnote');ctxC()">📝 ملاحظة جديدة</div>
     <div class="cxi" onclick="OW('wgal');ctxC()">🖼️ فتح المعرض</div>
-    <div class="cxi" onclick="OW('wcalc');ctxC()">🔢 الحاسبة</div>
+    <div class="cxi" onclick="OW('wlove');ctxC()">💕 عداد الحب</div>
+    <div class="cxi" onclick="OW('wquiz');ctxC()">📋 اختبارنا</div>
     <div class="cxs"></div>
     <div class="cxi" onclick="toggleDark();ctxC()">🌙 وضع داكن</div>
     <div class="cxi" onclick="OW('wset');ctxC()">⚙️ الإعدادات</div>
@@ -796,7 +1053,7 @@ onAuthStateChanged(auth,async u=>{
   if(u){
     window.CU=u;
     document.getElementById('lotxt').textContent='تحميل بياناتك...';
-    await Promise.all([loadNotes(),loadGallery(),loadRec()]);
+    await Promise.all([loadNotes(),loadGallery(),loadRec(),loadLove(),loadQuizzes()]);
     enterDesk(u);
   }else{
     window.CU=null;
@@ -987,7 +1244,6 @@ window.glDel=async function(e,id){
 
 // ══ RECYCLE ══
 window.rcD=[];
-
 async function loadRec(){
   if(!window.CU)return;
   const uid=window.CU.uid;
@@ -1054,9 +1310,384 @@ window.rcAll=async function(){
   if(n>0)showN('↩️','تم استعادة الكل',n+' عنصر');
 };
 
+// ══ LOVE COUNTER ══
+window.loveData={};
+
+async function loadLove(){
+  if(!window.CU)return;
+  const uid=window.CU.uid;
+  try{
+    const snap=await getDoc(doc(db,`users/${uid}/love/config`));
+    if(snap.exists()){window.loveData=snap.data();loveRender();}
+  }catch(ex){console.warn('love:',ex);}
+}
+window.loadLove=loadLove;
+
+window.loveSave=async function(){
+  if(!window.CU)return;
+  const n1=document.getElementById('loveName1').value.trim();
+  const n2=document.getElementById('loveName2').value.trim();
+  const d=document.getElementById('loveDate').value;
+  if(!n1||!n2||!d){showN('⚠️','ناقص','أكمل جميع الحقول');return;}
+  const data={name1:n1,name2:n2,startDate:d,createdAt:Date.now()};
+  try{
+    await setDoc(doc(FB.db,`users/${window.CU.uid}/love/config`),data);
+    window.loveData=data;
+    loveRender();
+    showN('💕','تم الحفظ','عداد الحب يعمل الآن! 🎉');
+  }catch(ex){showN('❌','خطأ',ex.message);}
+};
+
+function loveRender(){
+  if(!window.loveData.startDate){
+    document.getElementById('loveSetupDiv').style.display='';
+    document.getElementById('loveMainDiv').style.display='none';
+    return;
+  }
+  document.getElementById('loveSetupDiv').style.display='none';
+  document.getElementById('loveMainDiv').style.display='flex';
+  document.getElementById('lvn1').textContent=window.loveData.name1||'أنا';
+  document.getElementById('lvn2').textContent=window.loveData.name2||'حبيبي';
+  loveTickUpdate();
+}
+
+window.loveReset=function(){
+  document.getElementById('loveSetupDiv').style.display='';
+  document.getElementById('loveMainDiv').style.display='none';
+  if(window.loveData.name1)document.getElementById('loveName1').value=window.loveData.name1;
+  if(window.loveData.name2)document.getElementById('loveName2').value=window.loveData.name2;
+  if(window.loveData.startDate)document.getElementById('loveDate').value=window.loveData.startDate;
+};
+
+function loveTickUpdate(){
+  if(!window.loveData.startDate)return;
+  const start=new Date(window.loveData.startDate);
+  const now=new Date();
+  const diff=now-start;
+  if(diff<0){document.getElementById('loveTimer').textContent='التاريخ في المستقبل 💫';return;}
+  const totalSecs=Math.floor(diff/1000);
+  const secs=totalSecs%60;
+  const totalMins=Math.floor(totalSecs/60);
+  const mins=totalMins%60;
+  const totalHours=Math.floor(totalMins/60);
+  const hours=totalHours%24;
+  const totalDays=Math.floor(totalHours/24);
+  const years=Math.floor(totalDays/365);
+  const months=Math.floor((totalDays%365)/30);
+  const days=totalDays;
+  document.getElementById('loveTimer').textContent=`${totalDays.toLocaleString('ar')} يوم، ${hours} ساعة، ${mins} دقيقة`;
+  document.getElementById('lvdays').textContent=totalDays.toLocaleString('ar');
+  document.getElementById('lvhours').textContent=totalHours.toLocaleString('ar');
+  document.getElementById('lvmins').textContent=totalMins.toLocaleString('ar');
+  document.getElementById('lvmonths').textContent=(years*12+months).toLocaleString('ar');
+  document.getElementById('lvyears').textContent=years.toLocaleString('ar');
+  document.getElementById('lvsecs').textContent=totalSecs.toLocaleString('ar');
+  // Anniversary
+  const nextAnniv=new Date(start);
+  nextAnniv.setFullYear(now.getFullYear());
+  if(nextAnniv<=now)nextAnniv.setFullYear(now.getFullYear()+1);
+  const daysLeft=Math.ceil((nextAnniv-now)/(1000*60*60*24));
+  const yr=nextAnniv.getFullYear()-start.getFullYear();
+  document.getElementById('loveAnnivTxt').textContent=`الذكرى السنوية ${yr} بعد ${daysLeft} يوم 🎉`;
+}
+setInterval(loveTickUpdate,1000);
+
+window.loveSpawnHearts=function(){
+  const c=document.getElementById('heartsFloat');
+  const emojis=['💕','❤️','💖','💗','💓','💝','🌹','✨'];
+  for(let i=0;i<8;i++){
+    const h=document.createElement('div');
+    h.className='fheart';
+    h.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    h.style.left=(10+Math.random()*80)+'%';
+    h.style.bottom='10%';
+    h.style.animationDelay=(Math.random()*.5)+'s';
+    h.style.fontSize=(16+Math.random()*14)+'px';
+    c.appendChild(h);
+    setTimeout(()=>h.remove(),2200);
+  }
+};
+
+// ══ QUIZ ══
+window.quizQuestions=[];
+window.quizzesList=[];
+window.currentEditQuizId=null;
+
+async function loadQuizzes(){
+  if(!window.CU)return;
+  const uid=window.CU.uid;
+  try{
+    const snap=await getDocs(query(collection(db,`users/${uid}/quizzes`),orderBy('createdAt','desc')));
+    window.quizzesList=[];
+    snap.forEach(d=>window.quizzesList.push({fbId:d.id,...d.data()}));
+    quizRenderList();
+    quizUpdateResultSel();
+  }catch(ex){console.warn('quiz:',ex);}
+}
+window.loadQuizzes=loadQuizzes;
+
+window.quizTab=function(el,name){
+  document.querySelectorAll('.quiz-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.quiz-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('qp-'+name)?.classList.add('on');
+  if(name==='myquizzes')quizRenderList();
+  if(name==='results')quizUpdateResultSel();
+};
+
+window.quizAddQ=function(){
+  const idx=window.quizQuestions.length;
+  window.quizQuestions.push({text:'',options:['','','',''],correct:0});
+  quizRenderCreate();
+};
+
+function quizRenderCreate(){
+  const list=document.getElementById('quiz-questions-list');
+  list.innerHTML=window.quizQuestions.map((q,i)=>`
+    <div class="quiz-q-card" id="qq-${i}">
+      <div class="quiz-q-num">سؤال ${i+1}</div>
+      <button class="quiz-del-q" onclick="quizDelQ(${i})">✕</button>
+      <input class="quiz-q-inp" placeholder="اكتب السؤال هنا..." value="${q.text.replace(/"/g,'&quot;')}" oninput="quizQuestions[${i}].text=this.value">
+      <div class="quiz-opts">
+        ${q.options.map((opt,j)=>`
+          <div class="quiz-opt-row">
+            <button class="quiz-correct-btn${q.correct===j?' sel':''}" onclick="quizSetCorrect(${i},${j})" title="هذا هو الجواب الصحيح">${q.correct===j?'✓':''}</button>
+            <input class="quiz-opt-inp" placeholder="خيار ${j+1}" value="${opt.replace(/"/g,'&quot;')}" oninput="quizQuestions[${i}].options[${j}]=this.value">
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+window.quizDelQ=function(i){
+  window.quizQuestions.splice(i,1);quizRenderCreate();
+};
+
+window.quizSetCorrect=function(qi,oi){
+  window.quizQuestions[qi].correct=oi;quizRenderCreate();
+};
+
+window.quizSaveAll=async function(){
+  if(!window.CU)return;
+  const title=document.getElementById('quizTitleInp').value.trim()||'اختبار بلا عنوان';
+  const qs=window.quizQuestions.filter(q=>q.text.trim());
+  if(!qs.length){showN('⚠️','لا أسئلة','أضف سؤالاً واحداً على الأقل');return;}
+  const uid=window.CU.uid;
+  try{
+    const data={title,questions:qs,createdAt:Date.now(),updatedAt:Date.now()};
+    if(window.currentEditQuizId){
+      await setDoc(doc(db,`users/${uid}/quizzes`,window.currentEditQuizId),data,{merge:true});
+      const idx=window.quizzesList.findIndex(q=>q.fbId===window.currentEditQuizId);
+      if(idx>=0)window.quizzesList[idx]={fbId:window.currentEditQuizId,...data};
+    }else{
+      const ref=await addDoc(collection(db,`users/${uid}/quizzes`),data);
+      window.quizzesList.unshift({fbId:ref.id,...data});
+      window.currentEditQuizId=ref.id;
+    }
+    quizRenderList();quizUpdateResultSel();
+    showN('✅','تم الحفظ',title+' ('+qs.length+' سؤال)');
+  }catch(ex){showN('❌','خطأ',ex.message);}
+};
+
+function quizRenderList(){
+  const l=document.getElementById('quiz-my-list');
+  if(!window.quizzesList.length){l.innerHTML='<div style="text-align:center;color:#bbb;padding:40px;font-size:14px">لا توجد اختبارات محفوظة</div>';return;}
+  l.innerHTML=window.quizzesList.map((q,i)=>`
+    <div class="quiz-list-item">
+      <div class="qlinfo">
+        <div class="qltit">${q.title||'اختبار'}</div>
+        <div class="qlsub">${(q.questions||[]).length} سؤال · ${q.createdAt?new Date(q.createdAt).toLocaleDateString('ar-SA'):''}</div>
+      </div>
+      <div class="qlacts">
+        <button class="qlbtn share" onclick="quizShare('${q.fbId}')">🔗 مشاركة</button>
+        <button class="qlbtn" onclick="quizEdit(${i})">✏️ تعديل</button>
+        <button class="qlbtn del" onclick="quizDelete('${q.fbId}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.quizEdit=function(i){
+  const q=window.quizzesList[i];
+  window.currentEditQuizId=q.fbId;
+  window.quizQuestions=JSON.parse(JSON.stringify(q.questions||[]));
+  document.getElementById('quizTitleInp').value=q.title||'';
+  quizRenderCreate();
+  document.querySelectorAll('.quiz-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.quiz-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelector('.quiz-tab').classList.add('on');
+  document.getElementById('qp-create').classList.add('on');
+  showN('✏️','وضع التعديل',q.title);
+};
+
+window.quizShare=function(qid){
+  // Share URL: append ?quiz=uid/qid to current URL
+  const uid=window.CU?.uid;
+  const shareUrl=location.origin+location.pathname+'?quiz='+uid+'__'+qid;
+  navigator.clipboard?.writeText(shareUrl).then(()=>showN('🔗','تم نسخ الرابط','شاركه مع حبيبك للإجابة على الاختبار 💕'));
+  showN('🔗','رابط الاختبار',shareUrl.length>60?shareUrl.substring(0,60)+'...':shareUrl);
+};
+
+window.quizDelete=async function(fbId){
+  if(!window.CU||!confirm('حذف هذا الاختبار؟'))return;
+  try{
+    await deleteDoc(doc(FB.db,`users/${window.CU.uid}/quizzes`,fbId));
+    window.quizzesList=window.quizzesList.filter(q=>q.fbId!==fbId);
+    quizRenderList();quizUpdateResultSel();
+    showN('🗑️','تم الحذف','');
+  }catch(ex){showN('❌','خطأ',ex.message);}
+};
+
+function quizUpdateResultSel(){
+  const sel=document.getElementById('quizResultSel');
+  const prev=sel.value;
+  sel.innerHTML='<option value="">اختر اختباراً...</option>';
+  window.quizzesList.forEach(q=>sel.innerHTML+=`<option value="${q.fbId}">${q.title||'اختبار'}</option>`);
+  if(prev)sel.value=prev;
+}
+
+window.quizLoadResults=async function(){
+  if(!window.CU)return;
+  const qid=document.getElementById('quizResultSel').value;
+  const l=document.getElementById('quiz-results-list');
+  const cnt=document.getElementById('quizResultCount');
+  if(!qid){l.innerHTML='<div style="text-align:center;color:#bbb;padding:40px;font-size:14px">اختر اختباراً لعرض نتائجه</div>';return;}
+  l.innerHTML='<div style="text-align:center;color:#bbb;padding:20px">جارٍ التحميل...</div>';
+  const uid=window.CU.uid;
+  try{
+    const quiz=window.quizzesList.find(q=>q.fbId===qid);
+    const total=(quiz?.questions||[]).length;
+    const snap=await getDocs(query(collection(db,`users/${uid}/quizResults`),orderBy('submittedAt','desc')));
+    const results=[];
+    snap.forEach(d=>{const data=d.data();if(data.quizId===qid)results.push(data);});
+    cnt.textContent=results.length+' نتيجة';
+    if(!results.length){l.innerHTML='<div style="text-align:center;color:#bbb;padding:40px;font-size:14px">لا توجد نتائج بعد 😊</div>';return;}
+    l.innerHTML=results.map(r=>{
+      const pct=total>0?Math.round((r.score/total)*100):0;
+      return`<div class="quiz-result-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div><div class="qr-name">👤 ${r.name||'مجهول'}</div><div class="qr-date">${r.submittedAt?new Date(r.submittedAt).toLocaleString('ar-SA'):''}</div></div>
+          <div class="qr-score">${r.score}/${total} · ${pct}%</div>
+        </div>
+        <div class="qr-bar"><div class="qr-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }catch(ex){l.innerHTML='<div style="color:#c42b1c;padding:20px">خطأ في التحميل</div>';}
+};
+
+// ══ TAKE QUIZ (shared link) ══
+window._qtState={quiz:null,name:'',answers:[],cur:0,submitted:false};
+
+window.quizTakeOpen=async function(uidOwner,quizId){
+  try{
+    const snap=await getDoc(doc(db,`users/${uidOwner}/quizzes`,quizId));
+    if(!snap.exists()){alert('الاختبار غير موجود');return;}
+    const quiz={fbId:snap.id,...snap.data()};
+    window._qtState={quiz,name:'',answers:[],cur:0,submitted:false,uidOwner};
+    document.getElementById('qtTitle').textContent=quiz.title||'الاختبار';
+    document.getElementById('qtSub').textContent=(quiz.questions||[]).length+' سؤال';
+    document.getElementById('quizTake').classList.add('open');
+    qtShowNameScreen();
+  }catch(ex){alert('خطأ في تحميل الاختبار');}
+};
+
+function qtShowNameScreen(){
+  const c=document.getElementById('qtContent');
+  document.getElementById('qtProg').style.width='0%';
+  c.innerHTML=`<div class="qt-name-screen">
+    <div style="font-size:50px">📋</div>
+    <div style="font-size:20px;font-weight:700;color:#222;">${window._qtState.quiz.title||'الاختبار'}</div>
+    <div style="font-size:14px;color:#888;">${(window._qtState.quiz.questions||[]).length} سؤال · أجب بأمانة 💕</div>
+    <input class="qt-name-inp" id="qtNameInp" placeholder="اكتب اسمك..." maxlength="30">
+    <button class="qt-start-btn" onclick="qtStart()">ابدأ الاختبار ←</button>
+  </div>`;
+}
+
+window.qtStart=function(){
+  const name=document.getElementById('qtNameInp')?.value.trim();
+  if(!name){showN('⚠️','أدخل اسمك','');return;}
+  window._qtState.name=name;
+  window._qtState.answers=new Array((window._qtState.quiz.questions||[]).length).fill(-1);
+  window._qtState.cur=0;
+  qtShowQ();
+};
+
+function qtShowQ(){
+  const s=window._qtState;
+  const q=s.quiz.questions[s.cur];
+  const total=s.quiz.questions.length;
+  const pct=Math.round((s.cur/total)*100);
+  document.getElementById('qtProg').style.width=pct+'%';
+  const c=document.getElementById('qtContent');
+  c.innerHTML=`<div class="qt-q-card">
+    <div class="qt-q-num">سؤال ${s.cur+1} من ${total}</div>
+    <div class="qt-q-txt">${q.text}</div>
+    <div class="qt-options">
+      ${q.options.map((opt,i)=>opt?`<div class="qt-opt${s.answers[s.cur]===i?' sel':''}" onclick="qtSelect(${i})">${opt}</div>`:'').join('')}
+    </div>
+  </div>
+  <button class="qt-next-btn" onclick="qtNext()">${s.cur<total-1?'التالي ←':'إنهاء وإرسال النتيجة ✅'}</button>`;
+}
+
+window.qtSelect=function(i){
+  window._qtState.answers[window._qtState.cur]=i;
+  document.querySelectorAll('#qtContent .qt-opt').forEach((el,j)=>{el.classList.toggle('sel',j===i);});
+};
+
+window.qtNext=async function(){
+  const s=window._qtState;
+  if(s.answers[s.cur]===-1){showN('⚠️','اختر إجابة','');return;}
+  if(s.cur<s.quiz.questions.length-1){s.cur++;qtShowQ();}
+  else{await qtSubmit();}
+};
+
+async function qtSubmit(){
+  const s=window._qtState;
+  let score=0;
+  s.quiz.questions.forEach((q,i)=>{if(s.answers[i]===q.correct)score++;});
+  const pct=Math.round((score/s.quiz.questions.length)*100);
+  // Save result to owner's Firestore
+  try{
+    await addDoc(collection(db,`users/${s.uidOwner}/quizResults`),{quizId:s.quiz.fbId,quizTitle:s.quiz.title,name:s.name,score,total:s.quiz.questions.length,answers:s.answers,submittedAt:Date.now()});
+  }catch(ex){console.warn('save result:',ex);}
+  document.getElementById('qtProg').style.width='100%';
+  const emoji=pct>=80?'🎉':pct>=60?'😊':pct>=40?'😅':'💪';
+  const msg=pct>=80?'ممتاز! أنت تعرفني كويس جداً 💕':pct>=60?'جيد! بس في شوية ما تعرفه 😄':pct>=40?'عادي، لازم تعرفني أكتر 😅':'يا عيني عليك! ادرس أكثر 😂';
+  const c=document.getElementById('qtContent');
+  c.innerHTML=`<div class="qt-result-screen">
+    <div style="font-size:60px">${emoji}</div>
+    <div class="qt-score-big">${pct}%</div>
+    <div style="font-size:20px;font-weight:700;color:#222;">${score} / ${s.quiz.questions.length} إجابة صحيحة</div>
+    <div class="qt-score-txt">${msg}</div>
+    <div style="font-size:13px;color:#aaa;">أجاب ${s.name} · ${new Date().toLocaleString('ar-SA')}</div>
+    <button class="qt-close-btn" onclick="qtClose()">إغلاق</button>
+  </div>`;
+}
+
+window.qtClose=function(){
+  document.getElementById('quizTake').classList.remove('open');
+  // clear quiz param from URL
+  const url=new URL(location.href);url.searchParams.delete('quiz');history.replaceState({},'',url);
+};
+
+// Check URL for shared quiz
+function checkQuizParam(){
+  const p=new URLSearchParams(location.search).get('quiz');
+  if(!p)return;
+  const [uidOwner,qid]=p.split('__');
+  if(uidOwner&&qid){
+    // Wait for firebase to init
+    const chk=setInterval(()=>{
+      if(window.FB){clearInterval(chk);window.quizTakeOpen(uidOwner,qid);}
+    },300);
+  }
+}
+setTimeout(checkQuizParam,1500);
+
 window.doOut=async function(){
   if(!confirm('تسجيل الخروج؟'))return;
-  ['wnote','wgal','wset','wrec','wexp','wcalc','wclk','wmus'].forEach(id=>{const w=document.getElementById(id);if(w){w.classList.remove('open','maxi');w.style.display='none';window.wSt[id]='closed';}});
+  ['wnote','wgal','wset','wrec','wexp','wcalc','wclk','wmus','wlove','wquiz'].forEach(id=>{const w=document.getElementById(id);if(w){w.classList.remove('open','maxi');w.style.display='none';window.wSt[id]='closed';}});
   await signOut(auth);
   showN('👋','وداعاً!','تم تسجيل الخروج بنجاح');
 };
@@ -1076,6 +1707,8 @@ function enterDesk(u){
   const sm=document.getElementById('smem');if(sm&&performance.memory)sm.textContent=Math.round(performance.memory.usedJSHeapSize/1048576)+' MB';
   showN('✅','أهلاً '+name+'! 🎉','تم تسجيل الدخول وتحميل بياناتك');
   expGo('home',null);
+  // show love app if data exists
+  if(window.loveData?.startDate)loveRender();
 }
 
 // ═══ CLOCK ═══
@@ -1086,24 +1719,20 @@ function tick(){
   const clock=document.getElementById('tclock');if(clock)clock.innerHTML=`<b>${t}</b><br>${d}`;
   document.getElementById('ltime').textContent=n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('ldate').textContent=n.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  // Digital clock widget
   const cd=document.getElementById('clkdig');if(cd)cd.textContent=n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   const cdt=document.getElementById('clkdate2');if(cdt)cdt.textContent=n.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   drawAnalogClock(n);
 }
 tick();setInterval(tick,1000);
 
-// Analog Clock
 function drawAnalogClock(now){
   const c=document.getElementById('clkCanvas');if(!c)return;
   const ctx=c.getContext('2d'),W=160,H=160,cx=W/2,cy=H/2,R=72;
   ctx.clearRect(0,0,W,H);
-  // Face
   const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
   g.addColorStop(0,'rgba(255,255,255,.06)');g.addColorStop(1,'rgba(255,255,255,.01)');
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
   ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=1;ctx.stroke();
-  // Ticks
   for(let i=0;i<60;i++){
     const a=(i/60)*Math.PI*2-Math.PI/2,len=i%5===0?10:5,r1=R-3,r2=R-3-len;
     ctx.beginPath();
@@ -1112,16 +1741,11 @@ function drawAnalogClock(now){
     ctx.strokeStyle=i%5===0?'rgba(255,255,255,.7)':'rgba(255,255,255,.25)';
     ctx.lineWidth=i%5===0?2:1;ctx.stroke();
   }
-  // Hands
   const h=now.getHours()%12,m=now.getMinutes(),s=now.getSeconds();
   const ha=(h/12+m/720)*Math.PI*2-Math.PI/2;
   const ma=(m/60+s/3600)*Math.PI*2-Math.PI/2;
   const sa=(s/60)*Math.PI*2-Math.PI/2;
-  function hand(angle,len,w,color){
-    ctx.beginPath();ctx.moveTo(cx,cy);
-    ctx.lineTo(cx+len*Math.cos(angle),cy+len*Math.sin(angle));
-    ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke();
-  }
+  function hand(angle,len,w,color){ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+len*Math.cos(angle),cy+len*Math.sin(angle));ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke();}
   hand(ha,38,4,'rgba(255,255,255,.95)');
   hand(ma,54,3,'rgba(255,255,255,.9)');
   hand(sa,58,1.5,'rgba(96,205,255,1)');
@@ -1138,7 +1762,6 @@ function drawAnalogClock(now){
     const g=ctx.createLinearGradient(0,0,c.width,c.height);
     g.addColorStop(0,'#0a0618');g.addColorStop(.5,'#150e3a');g.addColorStop(1,'#0d0a2e');
     ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
-    // Glow blobs
     [[c.width*.25,c.height*.5,'rgba(0,80,180,.2)',.4],[c.width*.75,c.height*.4,'rgba(60,0,120,.15)',.35]].forEach(([x,y,col,r])=>{
       const rg=ctx.createRadialGradient(x,y,0,x,y,c.width*r);rg.addColorStop(0,col);rg.addColorStop(1,'transparent');ctx.fillStyle=rg;ctx.fillRect(0,0,c.width,c.height);
     });
@@ -1165,6 +1788,8 @@ window.OW=function(id){
   w.style.zIndex=++zT;tbM(id,true);
   if(id==='wrec')window.loadRec&&window.loadRec();
   if(id==='wexp')expGo('home',null);
+  if(id==='wquiz'){window.loadQuizzes&&window.loadQuizzes();}
+  if(id==='wlove'){window.loadLove&&window.loadLove();}
   closeSM();
 };
 
@@ -1213,7 +1838,6 @@ document.addEventListener('mousedown',e=>{
   if(!e.target.closest('#systray')&&!e.target.closest('#tclock')&&!e.target.closest('.tnet'))closeST();
 });
 
-// Dblclick titlebar to maximize
 document.querySelectorAll('.tbar2').forEach(tb=>tb.addEventListener('dblclick',e=>{
   if(e.target.closest('.wctrl'))return;
   XW(tb.id.replace('tb-',''));
@@ -1256,19 +1880,14 @@ window.toggleDark=function(){
   showN(on?'🌙':'☀️',on?'الوضع الداكن':'الوضع الفاتح','');
 };
 
-// ═══ ACCENT COLORS ═══
+// ═══ ACCENT ═══
 const accents=['#0078d4','#28a745','#dc3545','#fd7e14','#6f42c1','#17a2b8','#e83e8c','#343a40'];
 (function(){
   const g=document.getElementById('accentG');if(!g)return;
   accents.forEach((c,i)=>{
     const d=document.createElement('div');d.className='acol'+(i===0?' sel':'');
     d.style.background=c;
-    d.onclick=()=>{
-      document.querySelectorAll('.acol').forEach(x=>x.classList.remove('sel'));
-      d.classList.add('sel');
-      document.documentElement.style.setProperty('--a',c);
-      showN('🎨','تم تغيير اللون','');
-    };
+    d.onclick=()=>{document.querySelectorAll('.acol').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');document.documentElement.style.setProperty('--a',c);showN('🎨','تم تغيير اللون','');};
     g.appendChild(d);
   });
 })();
@@ -1331,7 +1950,7 @@ document.getElementById('desk').addEventListener('contextmenu',e=>{
   e.preventDefault();const m=document.getElementById('ctx');
   m.classList.add('open');
   m.style.left=Math.min(e.clientX,innerWidth-210)+'px';
-  m.style.top=Math.min(e.clientY,innerHeight-200)+'px';
+  m.style.top=Math.min(e.clientY,innerHeight-220)+'px';
 });
 window.ctxC=function(){document.getElementById('ctx').classList.remove('open');};
 
@@ -1356,7 +1975,9 @@ window.expGo=function(sec,el){
       <div class="expf" ondblclick="expGo('gallery',null)"><div class="efico">🖼️</div><div class="efnm">الصور (${(window.glO||[]).length})</div></div>
       <div class="expf" ondblclick="expGo('recycle',null)"><div class="efico">🗑️</div><div class="efnm">المهملات (${(window.rcD||[]).length})</div></div>
       <div class="expf" ondblclick="OW('wset')"><div class="efico">⚙️</div><div class="efnm">الإعدادات</div></div>
-      <div class="expf" ondblclick="OW('wcalc')"><div class="efico">🔢</div><div class="efnm">الحاسبة</div></div>`;
+      <div class="expf" ondblclick="OW('wcalc')"><div class="efico">🔢</div><div class="efnm">الحاسبة</div></div>
+      <div class="expf" ondblclick="OW('wlove')"><div class="efico">💕</div><div class="efnm">عداد الحب</div></div>
+      <div class="expf" ondblclick="OW('wquiz')"><div class="efico">📋</div><div class="efnm">اختبارنا</div></div>`;
   }else if(sec==='notes'){
     const ks=Object.keys(window.npD||{});
     g.innerHTML=ks.length?ks.map(id=>`<div class="expf" ondblclick="OW('wnote')"><div class="efico">📄</div><div class="efnm">${((window.npD[id]?.title)||'ملاحظة').substring(0,18)}</div></div>`).join(''):'<div style="padding:24px;color:#bbb;font-size:13px">لا توجد ملاحظات</div>';
@@ -1380,7 +2001,6 @@ window.expSearch=function(){
 
 // ═══ CALCULATOR ═══
 let calExpr='',calCur='0',calNew=true;
-
 window.calIn=function(v){
   if(v==='+/-'){calCur=(parseFloat(calCur)*-1).toString();updCal();return;}
   if(calNew&&!isNaN(v)&&v!=='.'){calCur=v;calNew=false;}
@@ -1425,8 +2045,8 @@ window.npToggleFmt=function(){
   else{a.style.fontWeight='bold';btn.style.fontWeight='bold';}
 };
 
-// ═══ MUSIC PLAYER ═══
-let musAudio=null,musPlaying=false,musShuffle=false,musRepeatMode=false;
+// ═══ MUSIC ═══
+let musAudio=null,musPlaying=false,_musShuffle=false,musRepeatMode=false;
 window.musLoad=function(e){
   const f=e.target.files[0];if(!f)return;
   if(musAudio){musAudio.pause();musAudio=null;}
@@ -1440,10 +2060,7 @@ window.musLoad=function(e){
     document.getElementById('muscur').textContent=fmtTime(musAudio.currentTime);
     document.getElementById('mustot').textContent=fmtTime(musAudio.duration);
   });
-  musAudio.addEventListener('ended',()=>{
-    if(musRepeatMode){musAudio.currentTime=0;musAudio.play();}
-    else{musStop();}
-  });
+  musAudio.addEventListener('ended',()=>{if(musRepeatMode){musAudio.currentTime=0;musAudio.play();}else{musStop();}});
   musPlay();
 };
 function musPlay(){musAudio?.play();musPlaying=true;document.getElementById('musPbtn').textContent='⏸';document.getElementById('musart').classList.add('spin');}
@@ -1451,26 +2068,29 @@ function musStop(){musPlaying=false;document.getElementById('musPbtn').textConte
 window.musToggle=function(){if(!musAudio)return;if(musPlaying){musAudio.pause();musStop();}else{musPlay();}};
 window.musPrev=function(){if(musAudio)musAudio.currentTime=Math.max(0,musAudio.currentTime-10);};
 window.musNext=function(){if(musAudio)musAudio.currentTime=Math.min(musAudio.duration,musAudio.currentTime+10);};
-window.musShuffle=function(){musShuffle=!musShuffle;document.getElementById('musShuf').style.opacity=musShuffle?.5:1;};
+window.musShuffle=function(){_musShuffle=!_musShuffle;document.getElementById('musShuf').style.opacity=_musShuffle?.5:1;};
 window.musRepeat=function(){musRepeatMode=!musRepeatMode;document.getElementById('musRep').style.opacity=musRepeatMode?1:.4;};
 window.musVol=function(v){if(musAudio)musAudio.volume=v/100;};
-window.musSeek=function(e){
-  if(!musAudio||!musAudio.duration)return;
-  const r=e.currentTarget.getBoundingClientRect();
-  musAudio.currentTime=((e.clientX-r.left)/r.width)*musAudio.duration;
-};
+window.musSeek=function(e){if(!musAudio||!musAudio.duration)return;const r=e.currentTarget.getBoundingClientRect();musAudio.currentTime=((e.clientX-r.left)/r.width)*musAudio.duration;};
 function fmtTime(s){if(!s||isNaN(s))return'0:00';const m=Math.floor(s/60),ss=Math.floor(s%60);return m+':'+(ss<10?'0':'')+ss;}
 
 // ═══ KEYBOARD ═══
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('ls').classList.contains('gone')&&!document.getElementById('ls').classList.contains('out'))return;
   if(e.ctrlKey&&e.key==='s'){e.preventDefault();window.npSave&&npSave();}
-  if(e.key==='Escape'){closeSM();ctxC();lbC();closeST();}
+  if(e.key==='Escape'){closeSM();ctxC();lbC();closeST();document.getElementById('quizTake').classList.remove('open');}
   if(e.key==='ArrowLeft'&&document.getElementById('lb').classList.contains('open'))lbN(1);
   if(e.key==='ArrowRight'&&document.getElementById('lb').classList.contains('open'))lbN(-1);
   if(e.key==='F11'){e.preventDefault();const w=document.fullscreenElement;w?document.exitFullscreen():document.documentElement.requestFullscreen();}
 });
 ['lemail','lpass'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lbtn').click();}));
+
+// ═══ QUIZ INIT ═══
+window.quizQuestions=[];
+window.quizzesList=[];
+window.currentEditQuizId=null;
+// Add first question placeholder
+window.quizAddQ();
 </script>
 </body>
 </html>
